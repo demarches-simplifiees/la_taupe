@@ -8,3 +8,4 @@ rust-version = "1.75.0"
 
 [dependencies]
 rxing = "*"
+nom = "*"
