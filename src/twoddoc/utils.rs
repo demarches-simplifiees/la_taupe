@@ -1,5 +1,5 @@
 use chrono::{Duration, NaiveDate};
-use nom::{bytes::complete::take_while_m_n, combinator::map, IResult};
+use nom::{bytes::complete::take_while_m_n, combinator::map, error::Error, IResult, Parser};
 
 fn to_u32(s: &str) -> u32 {
     s.parse::<u32>().unwrap()
@@ -31,4 +31,18 @@ pub fn two_alphanum(input: &str) -> IResult<&str, &str> {
 
 pub fn date(input: &str) -> IResult<&str, NaiveDate> {
     map(four_alphanum, to_date)(input)
+}
+
+pub type BoxedParser<'a> = Box<dyn Parser<&'a str, &'a str, Error<&'a str>> + 'a>;
+
+pub fn alphanumeric<'a>(min: usize, max: usize) -> BoxedParser<'a> {
+    Box::new(take_while_m_n(min, max, |c: char| {
+        c.is_ascii_alphanumeric()
+    }))
+}
+
+pub fn alphanumeric_space_slash<'a>(min: usize, max: usize) -> BoxedParser<'a> {
+    Box::new(take_while_m_n(min, max, |c: char| {
+        c.is_ascii_alphanumeric() || c == '/' || c == ' '
+    }))
 }
