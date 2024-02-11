@@ -2,16 +2,15 @@ use std::collections::HashMap;
 
 use self::{
     entete::Entete,
-    utils::{date, four_alphanum, two_alphanum},
+    utils::{date, four_alphanum, two_alphanum, two_digit},
 };
 
 use crate::twoddoc::data_structure::data_structure;
 use nom::{
     branch::alt,
     bytes::complete::tag,
-    error::Error,
     multi::many1,
-    sequence::{terminated, Tuple},
+    sequence::{preceded, terminated, Tuple},
     IResult,
 };
 
@@ -20,10 +19,11 @@ pub mod entete;
 pub mod utils;
 
 pub fn parse(i: &str) -> Option<(Entete, HashMap<&str, &str>)> {
-    // DC02 : we only support this version
-    let (i, _) = (tag::<&str, &str, Error<&str>>("DC"), tag("02"))
-        .parse(i)
-        .ok()?;
+    let (i, version) = version(i)?;
+
+    if version != 2 {
+        return None;
+    }
 
     let mut v2_2ddoc = (four_alphanum, four_alphanum, date, date, two_alphanum);
     let (message, entete) = v2_2ddoc.parse(i).unwrap();
@@ -32,6 +32,10 @@ pub fn parse(i: &str) -> Option<(Entete, HashMap<&str, &str>)> {
     let bag: HashMap<&str, &str> = data2.iter().cloned().collect();
 
     Some((Entete::from(entete), bag))
+}
+
+pub fn version(i: &str) -> Option<(&str, u32)> {
+    preceded(tag("DC"), two_digit)(i).ok()
 }
 
 fn datum(i: &str) -> IResult<&str, (&str, &str)> {
