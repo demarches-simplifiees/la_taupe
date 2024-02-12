@@ -54,3 +54,13 @@ pub fn alphanumeric_space_slash<'a>(min: usize, max: usize) -> BoxedParser<'a> {
         c.is_ascii_alphanumeric() || c == '/' || c == ' '
     }))
 }
+
+pub fn digit_and_comma<'a>(min: usize, max: usize) -> BoxedParser<'a> {
+    Box::new(take_while_m_n(min, max, |c: char| {
+        c.is_ascii_digit() || c == ','
+    }))
+}
+
+pub fn digit<'a>(min: usize, max: usize) -> BoxedParser<'a> {
+    Box::new(take_while_m_n(min, max, |c: char| c.is_ascii_digit()))
+}
