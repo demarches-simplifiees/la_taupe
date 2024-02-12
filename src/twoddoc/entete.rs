@@ -4,14 +4,14 @@ use chrono::NaiveDate;
 pub struct Entete {
     pub autorite_certification: String,
     pub identifiant_du_certificat: String,
-    pub date_emission: NaiveDate,
+    pub date_emission: Option<NaiveDate>,
     pub date_creation_signature: NaiveDate,
     pub type_document_id: String,
     pub perimetre: Option<String>,
 }
 
-impl From<(&str, &str, NaiveDate, NaiveDate, &str)> for Entete {
-    fn from(data: (&str, &str, NaiveDate, NaiveDate, &str)) -> Self {
+impl From<(&str, &str, Option<NaiveDate>, NaiveDate, &str)> for Entete {
+    fn from(data: (&str, &str, Option<NaiveDate>, NaiveDate, &str)) -> Self {
         Entete {
             autorite_certification: data.0.to_string(),
             identifiant_du_certificat: data.1.to_string(),
@@ -23,8 +23,8 @@ impl From<(&str, &str, NaiveDate, NaiveDate, &str)> for Entete {
     }
 }
 
-impl From<(&str, &str, NaiveDate, NaiveDate, &str, &str)> for Entete {
-    fn from(data: (&str, &str, NaiveDate, NaiveDate, &str, &str)) -> Self {
+impl From<(&str, &str, Option<NaiveDate>, NaiveDate, &str, &str)> for Entete {
+    fn from(data: (&str, &str, Option<NaiveDate>, NaiveDate, &str, &str)) -> Self {
         Entete {
             autorite_certification: data.0.to_string(),
             identifiant_du_certificat: data.1.to_string(),

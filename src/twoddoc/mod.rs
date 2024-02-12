@@ -25,15 +25,32 @@ pub fn parse(doc: &str) -> Option<(Entete, HashMap<&str, &str>)> {
     let (i, version) = version(doc)?;
 
     let (message, entete) = match version {
-        2 => { 
-            let (m, entete) = (four_alphanum, four_alphanum, date, date, two_alphanum)
-                .parse(i).unwrap();
+        2 => {
+            let (m, entete) = (
+                four_alphanum,
+                four_alphanum,
+                date_option,
+                date,
+                two_alphanum,
+            )
+                .parse(i)
+                .unwrap();
 
             (m, Entete::from(entete))
-        },
-        3 => { 
-            let (m, entete) = (four_alphanum, four_alphanum, date, date, two_alphanum, two_alphanum)
-                .parse(i).unwrap();
+        }
+        3 => {
+            let (m, entete) = (
+                four_alphanum,
+                four_alphanum,
+                date_option,
+                date,
+                two_alphanum,
+                two_alphanum,
+            )
+                .parse(i)
+                .unwrap();
+
+            (m, Entete::from(entete))
 
             (m, Entete::from(entete))
         },
@@ -105,7 +122,7 @@ mod tests {
             Entete {
                 autorite_certification: "FR00".to_string(),
                 identifiant_du_certificat: "0001".to_string(),
-                date_emission: NaiveDate::from_ymd_opt(2012, 11, 15).unwrap(),
+                date_emission: Some(NaiveDate::from_ymd_opt(2012, 11, 15).unwrap()),
                 date_creation_signature: NaiveDate::from_ymd_opt(2012, 11, 13).unwrap(),
                 type_document_id: "00".to_string(),
                 perimetre: None,
@@ -140,7 +157,7 @@ mod tests {
             Entete {
                 autorite_certification: "FR00".to_string(),
                 identifiant_du_certificat: "0001".to_string(),
-                date_emission: NaiveDate::from_ymd_opt(2012, 10, 15).unwrap(),
+                date_emission: Some(NaiveDate::from_ymd_opt(2012, 10, 15).unwrap()),
                 date_creation_signature: NaiveDate::from_ymd_opt(2015, 7, 27).unwrap(),
                 type_document_id: "01".to_string(),
                 perimetre: Some("01".to_string()),
