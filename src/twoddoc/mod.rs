@@ -8,18 +8,21 @@ use self::{
 use crate::twoddoc::data_structure::data_structure;
 use nom::{
     branch::alt,
-    bytes::complete::tag,
+    bytes::complete::{is_not, tag},
+    character::complete::alphanumeric1,
+    error::Error,
     multi::many1,
-    sequence::{preceded, terminated, Tuple},
+    sequence::{preceded, separated_pair, terminated, Tuple},
     IResult,
 };
 
 pub mod data_structure;
 pub mod entete;
+mod signature;
 pub mod utils;
 
-pub fn parse(i: &str) -> Option<(Entete, HashMap<&str, &str>)> {
-    let (i, version) = version(i)?;
+pub fn parse(doc: &str) -> Option<(Entete, HashMap<&str, &str>)> {
+    let (i, version) = version(doc)?;
 
     if version != 2 {
         return None;
@@ -28,10 +31,18 @@ pub fn parse(i: &str) -> Option<(Entete, HashMap<&str, &str>)> {
     let mut v2_2ddoc = (four_alphanum, four_alphanum, date, date, two_alphanum);
     let (message, entete) = v2_2ddoc.parse(i).unwrap();
 
-    let (_, data2) = many1(datum)(message).ok()?;
-    let bag: HashMap<&str, &str> = data2.iter().cloned().collect();
+    let entete = Entete::from(entete);
 
-    Some((Entete::from(entete), bag))
+    let (_, data) = many1(datum)(message).ok()?;
+    let bag: HashMap<&str, &str> = data.iter().cloned().collect();
+
+    check_signature(
+        doc,
+        &entete.autorite_certification,
+        &entete.identifiant_du_certificat,
+    );
+
+    Some((entete, bag))
 }
 
 pub fn version(i: &str) -> Option<(&str, u32)> {
@@ -48,6 +59,22 @@ fn datum(i: &str) -> IResult<&str, (&str, &str)> {
     .map(|(i, data)| (i, (data_id, data)))
 }
 
+fn check_signature(i: &str, autorite_certification: &str, identifiant_du_certificat: &str) {
+    let (_, (payload, signature)) = separated_pair(
+        is_not::<&str, &str, Error<&str>>(""),
+        tag(""),
+        alphanumeric1,
+    )(i)
+    .unwrap();
+
+    signature::check(
+        payload,
+        signature,
+        autorite_certification,
+        identifiant_du_certificat,
+    );
+}
+
 #[cfg(test)]
 mod tests {
     use chrono::NaiveDate;
@@ -56,7 +83,7 @@ mod tests {
 
     #[test]
     fn test_parse() {
-        let i = "DC02FR000001125E125C0026FR245700010MLLE/SAMPLE/ANGELA\u{1d}20\u{1d}21BAT 2 ETG 3\u{1d}23\u{1d}25METZ\u{1d}227 PLACE DES SPECIMENS\u{1d}\u{1f}Z2HSK7UZM6KPL7UL6OK7NR77GSPGPNNUYYEE4ZV75L5OCIWKVOXTV3I5AJLRSUDOIR76F75QY4Z7KLH3FACKHVF7JH3DYMRI5EIAZMI";
+        let i = "DC02FR000001125E125C0026FR245700010MLLE/SAMPLE/ANGELA2021BAT 2 ETG 32325METZ227 PLACE DES SPECIMENSZ2HSK7UZM6KPL7UL6OK7NR77GSPGPNNUYYEE4ZV75L5OCIWKVOXTV3I5AJLRSUDOIR76F75QY5Z7KLH3FACKHVF7JH3DYMRI5EIAZMI";
 
         let (entete, bag) = parse(i).unwrap();
 
