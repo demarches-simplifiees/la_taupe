@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use self::{
     entete::Entete,
-    utils::{date, four_alphanum, two_alphanum, two_digit},
+    utils::{date, date_option, four_alphanum, two_alphanum, two_digit},
 };
 
 use crate::twoddoc::data_structure::data_structure;
@@ -24,14 +24,54 @@ pub mod utils;
 pub fn parse(doc: &str) -> Option<(Entete, HashMap<&str, &str>)> {
     let (i, version) = version(doc)?;
 
-    if version != 2 {
-        return None;
-    }
+    let (message, entete) = match version {
+        2 => {
+            let (m, entete) = (
+                four_alphanum,
+                four_alphanum,
+                date_option,
+                date,
+                two_alphanum,
+            )
+                .parse(i)
+                .unwrap();
 
-    let mut v2_2ddoc = (four_alphanum, four_alphanum, date, date, two_alphanum);
-    let (message, entete) = v2_2ddoc.parse(i).unwrap();
+            (m, Entete::from(entete))
+        }
+        3 => {
+            let (m, entete) = (
+                four_alphanum,
+                four_alphanum,
+                date_option,
+                date,
+                two_alphanum,
+                two_alphanum,
+            )
+                .parse(i)
+                .unwrap();
 
-    let entete = Entete::from(entete);
+            (m, Entete::from(entete))
+        }
+        4 => {
+            let (m, entete) = (
+                four_alphanum,
+                four_alphanum,
+                date_option,
+                date,
+                two_alphanum,
+                two_alphanum,
+                two_alphanum,
+            )
+                .parse(i)
+                .unwrap();
+
+            (m, Entete::from(entete))
+        }
+        _ => {
+            log::warn!("Unsupported version: {}", version);
+            return None;
+        }
+    };
 
     let (_, data) = many1(datum)(message).ok()?;
     let bag: HashMap<&str, &str> = data.iter().cloned().collect();
@@ -81,8 +121,11 @@ mod tests {
 
     use super::*;
 
+    // "<US>"
+    // "<GS>"
+    // "<RS>"
     #[test]
-    fn test_parse() {
+    fn test_parse_v2_doc_00() {
         let i = "DC02FR000001125E125C0026FR245700010MLLE/SAMPLE/ANGELA2021BAT 2 ETG 32325METZ227 PLACE DES SPECIMENSZ2HSK7UZM6KPL7UL6OK7NR77GSPGPNNUYYEE4ZV75L5OCIWKVOXTV3I5AJLRSUDOIR76F75QY5Z7KLH3FACKHVF7JH3DYMRI5EIAZMI";
 
         let (entete, bag) = parse(i).unwrap();
@@ -92,9 +135,11 @@ mod tests {
             Entete {
                 autorite_certification: "FR00".to_string(),
                 identifiant_du_certificat: "0001".to_string(),
-                date_emission: NaiveDate::from_ymd_opt(2012, 11, 15).unwrap(),
+                date_emission: Some(NaiveDate::from_ymd_opt(2012, 11, 15).unwrap()),
                 date_creation_signature: NaiveDate::from_ymd_opt(2012, 11, 13).unwrap(),
-                type_document_id: "00".to_string()
+                type_document_id: "00".to_string(),
+                perimetre: None,
+                emetteur: None,
             }
         );
 
@@ -109,6 +154,71 @@ mod tests {
                 ("24", "57000"),
                 ("25", "METZ"),
                 ("26", "FR"),
+            ])
+        );
+    }
+
+    #[test]
+    fn test_parse_v3_doc_01() {
+        let i = "DC03FR000001123F1636010126FR247500010MME/SPECIMEN/NATACHA22145 AVENUE DES SPECIMENSFEDMPW5SO5BNZFYP7FIQUYZFV5H3OF6QERDMOBN7BZ4CC4KVJ4XWUH6EW3CSWILAGLN4XQE6AKHX6RNOI3OXVW6X3IKJASZGL62FBUQ";
+
+        let (entete, bag) = parse(i).unwrap();
+
+        assert_eq!(
+            entete,
+            Entete {
+                autorite_certification: "FR00".to_string(),
+                identifiant_du_certificat: "0001".to_string(),
+                date_emission: Some(NaiveDate::from_ymd_opt(2012, 10, 15).unwrap()),
+                date_creation_signature: NaiveDate::from_ymd_opt(2015, 7, 27).unwrap(),
+                type_document_id: "01".to_string(),
+                perimetre: Some("01".to_string()),
+                emetteur: None,
+            }
+        );
+
+        assert_eq!(
+            bag,
+            HashMap::from([
+                ("10", "MME/SPECIMEN/NATACHA"),
+                ("22", "145 AVENUE DES SPECIMENS"),
+                ("24", "75000"),
+                ("26", "FR"),
+            ])
+        );
+    }
+
+    #[test]
+    fn test_parse_v4_doc_04() {
+        let i = "DC04FR000001FFFF1FB60401FR432,7544227801234567845202146RETI PATRICK4A31072022416319847300112345678948RETI SOPHIE490701987765432QHA4A6QOV6AZJEBTIUNR7QOBXINNTMZTD5COQH6VN24NCZTXA7MYXB6SNSNTWAQRYK3ZFP4ZWBGLTJ6SDSPMURF7YFILKQFIAJY7NTI";
+
+        let (entete, bag) = parse(i).unwrap();
+
+        assert_eq!(
+            entete,
+            Entete {
+                autorite_certification: "FR00".to_string(),
+                identifiant_du_certificat: "0001".to_string(),
+                date_emission: None,
+                date_creation_signature: NaiveDate::from_ymd_opt(2022, 3, 24).unwrap(),
+                type_document_id: "04".to_string(),
+                perimetre: Some("01".to_string()),
+                emetteur: Some("FR".to_string()),
+            }
+        );
+
+        assert_eq!(
+            bag,
+            HashMap::from([
+                ("43", "2,75"),
+                ("44", "2278012345678"),
+                ("45", "2021"),
+                ("46", "RETI PATRICK"),
+                ("4A", "31072022"),
+                ("41", "63198"),
+                ("47", "3001123456789"),
+                ("48", "RETI SOPHIE"),
+                ("49", "0701987765432"),
             ])
         );
     }

@@ -5,12 +5,16 @@ fn to_u32(s: &str) -> u32 {
     s.parse::<u32>().unwrap()
 }
 
-pub fn to_date(s: &str) -> NaiveDate {
+pub fn to_date(s: &str) -> Option<NaiveDate> {
+    if s == "FFFF" {
+        return None;
+    }
+
     let days_to_add = i64::from_str_radix(s, 16).unwrap();
 
     let start_date = NaiveDate::from_ymd_opt(2000, 1, 1).unwrap();
 
-    start_date + Duration::days(days_to_add)
+    Some(start_date + Duration::days(days_to_add))
 }
 
 fn is_dec_digit(c: char) -> bool {
@@ -30,6 +34,10 @@ pub fn two_alphanum(input: &str) -> IResult<&str, &str> {
 }
 
 pub fn date(input: &str) -> IResult<&str, NaiveDate> {
+    map(four_alphanum, to_date)(input).map(|(i, d)| (i, d.unwrap()))
+}
+
+pub fn date_option(input: &str) -> IResult<&str, Option<NaiveDate>> {
     map(four_alphanum, to_date)(input)
 }
 
@@ -45,4 +53,14 @@ pub fn alphanumeric_space_slash<'a>(min: usize, max: usize) -> BoxedParser<'a> {
     Box::new(take_while_m_n(min, max, |c: char| {
         c.is_ascii_alphanumeric() || c == '/' || c == ' '
     }))
+}
+
+pub fn digit_and_comma<'a>(min: usize, max: usize) -> BoxedParser<'a> {
+    Box::new(take_while_m_n(min, max, |c: char| {
+        c.is_ascii_digit() || c == ','
+    }))
+}
+
+pub fn digit<'a>(min: usize, max: usize) -> BoxedParser<'a> {
+    Box::new(take_while_m_n(min, max, |c: char| c.is_ascii_digit()))
 }

@@ -3,6 +3,8 @@ use std::env::args;
 use la_taupe::{datamatrix::fetch_datamatrix, file_utils::file_to_img, twoddoc::parse};
 
 fn main() {
+    env_logger::init();
+
     let args: Vec<String> = args().collect();
 
     if args.len() < 2 {
