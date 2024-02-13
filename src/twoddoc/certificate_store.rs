@@ -7,13 +7,12 @@ use x509_cert::{
 
 use crate::twoddoc::trust_service::trust_service;
 
+static TEST_CERTIFICATE: &[u8] =
+    include_bytes!("../../tests/fixtures/certificates/certificate_FR00_00.pem");
+
 pub fn certificate(autorite_certification: &str, identifiant_du_certificat: &str) -> Certificate {
     if autorite_certification == "FR00" {
-        let cert_path = "tests/fixtures/certificates/certificate_FR00_00.pem";
-
-        let certificate_bytes = std::fs::read(cert_path).unwrap();
-
-        Certificate::from_pem(&certificate_bytes[..]).unwrap()
+        Certificate::from_pem(TEST_CERTIFICATE).unwrap()
     } else {
         fetch_certificate(autorite_certification, identifiant_du_certificat)
     }

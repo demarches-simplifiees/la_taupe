@@ -1,6 +1,8 @@
 use serde::Deserialize;
 use url::Url;
 
+static TSL_SIGNED_XML: &str = include_str!("tsl_signed.xml");
+
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TrustServiceStatusList {
     #[serde(rename = "TrustServiceProviderList")]
@@ -79,8 +81,7 @@ pub struct TrustService {
 }
 
 pub fn trust_service(autorite_du_certificat: &str) -> TrustService {
-    let xml = std::fs::read_to_string("tsl_signed.xml").unwrap();
-    let parsed = serde_xml_rs::from_str::<TrustServiceStatusList>(&xml).unwrap();
+    let parsed = serde_xml_rs::from_str::<TrustServiceStatusList>(TSL_SIGNED_XML).unwrap();
 
     let trust_services = parsed
         .list
