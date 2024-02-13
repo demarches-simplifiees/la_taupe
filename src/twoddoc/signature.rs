@@ -1,5 +1,6 @@
 use p256::ecdsa::{signature::Verifier, Signature, VerifyingKey};
-use x509_cert::{der::DecodePem, Certificate};
+
+use super::certificate_store::certificate;
 
 pub fn check(
     payload_str: &str,
@@ -24,14 +25,10 @@ fn to_signature(signature: &str) -> Signature {
 }
 
 fn fetch_verifying_key(
-    _autorite_certification: &str,
-    _identifiant_du_certificat: &str,
+    autorite_certification: &str,
+    identifiant_du_certificat: &str,
 ) -> VerifyingKey {
-    let cert_path = "tests/fixtures/certificates/certificate_FR00_00.pem";
-
-    let certificate_bytes = std::fs::read(cert_path).unwrap();
-
-    let certificate = Certificate::from_pem(&certificate_bytes[..]).unwrap();
+    let certificate = certificate(autorite_certification, identifiant_du_certificat);
 
     let key = certificate
         .tbs_certificate
