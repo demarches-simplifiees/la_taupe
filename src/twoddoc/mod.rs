@@ -16,9 +16,11 @@ use nom::{
     IResult,
 };
 
+mod certificate_store;
 pub mod data_structure;
 pub mod entete;
 mod signature;
+mod trust_service;
 pub mod utils;
 
 pub fn parse(doc: &str) -> Option<(Entete, HashMap<&str, &str>)> {

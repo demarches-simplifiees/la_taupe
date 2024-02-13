@@ -2,7 +2,10 @@ use super::utils::{alphanumeric, alphanumeric_space_slash, digit, digit_and_comm
 
 pub fn data_structure<'a>(id: &str) -> BoxedParser<'a> {
     match id {
+        "01" => alphanumeric(0, usize::MAX),
+        "02" => alphanumeric(0, usize::MAX),
         "10" => alphanumeric_space_slash(0, 38),
+        "18" => alphanumeric(0, usize::MAX),
         "20" => alphanumeric_space_slash(0, 38),
         "21" => alphanumeric_space_slash(0, 38),
         "22" => alphanumeric_space_slash(0, 38),
