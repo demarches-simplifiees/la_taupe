@@ -20,6 +20,7 @@ pub mod data_structure;
 pub mod entete;
 mod signature;
 pub mod utils;
+mod trust_service;
 
 pub fn parse(doc: &str) -> Option<(Entete, HashMap<&str, &str>)> {
     let (i, version) = version(doc)?;
