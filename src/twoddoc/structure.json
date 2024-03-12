@@ -1,0 +1,2786 @@
+[
+  {
+    "id": "01",
+    "nom": "Identifiant unique du document.",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cet identifiant permet en fonction de l’émetteur (si celui-ci fournit le service) de récupérer le document correspondant. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "02",
+    "nom": "Catégorie de document",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "03",
+    "nom": "Sous-catégorie de document",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "04",
+    "nom": "Application de composition",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "05",
+    "nom": "Version de l’application de composition",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "06",
+    "nom": "Date de l’association entre le document et le code 2D-DOC.",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Cette date est indiquée par le nombre de jours encodé en hexadécimal depuis le 1er janvier 2000 de la même manière que les dates fournies dans l’en-tête. Page 39 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "07",
+    "nom": "Heure de l’association entre le document et le code 2D-DOC.",
+    "min": "6",
+    "max": "6",
+    "nature": "Numérique",
+    "description": "Cette donnée est composée uniquement de 6 chiffres au format HHMMSS où HH représente l’heure, MM les minutes et SS les secondes. Les heures, les minutes et les secondes sont encodées sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "08",
+    "nom": "Date d’expiration du document",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Cette date est indiquée par le nombre de jours encodé en hexadécimal depuis le 1er janvier 2000 de la même manière que les dates fournies dans l’en-tête."
+  },
+  {
+    "id": "09",
+    "nom": "Nombre de pages du document",
+    "min": "4",
+    "max": "4",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. Le nombre devra être préfixé par des 0 si nécessaire."
+  },
+  {
+    "id": "0A",
+    "nom": "Editeur du 2D-DOC",
+    "min": "9",
+    "max": "9",
+    "nature": "Numérique",
+    "description": "Correspond au numéro de SIREN de l’éditeur, sur 9 caractères numériques."
+  },
+  {
+    "id": "0B",
+    "nom": "Intégrateur du 2D-DOC",
+    "min": "9",
+    "max": "9",
+    "nature": "Numérique",
+    "description": "Correspond au numéro de SIREN de l’intégrateur, sur 9 caractères numériques."
+  },
+  {
+    "id": "0C",
+    "nom": "URL du document",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique et symboles",
+    "description": "L’URL étant sensible à la casse, il n’est pas possible de réduire cela à l’ensemble des caractères majuscules. Pour permettre le stockage de cette donnée au format C40, l’URL ne subit aucune modification et son encodage UTF-8 est encodé en Base32. Cependant, une URL tronquée n’ayant pas de sens, ce champ ne devra pas être tronqué."
+  },
+  {
+    "id": "0D",
+    "nom": "UUID du document",
+    "min": "36",
+    "max": "36",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des caractères hexadécimaux en majuscules [0-9A-F] et des espaces. Les espaces remplacent les ‘-‘ dans l'UUID qui sera restitué au moment de l'affichage. Page 40 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.1. Identifiants de données propres aux factures"
+  },
+  {
+    "id": "10",
+    "nom": "Ligne 1 de la norme adresse postale du bénéficiaire de la prestation",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Qualité – Nom – Prénom – éventuellement titre ou profession du bénéficiaire de la prestation. Les items Qualité, Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces et éventuellement des ‘/’ pour séparer les zones Qualité, Nom et Prénom. Dans le cas, d’un nom de société, il n’est pas nécessaire d’utiliser des séparateurs."
+  },
+  {
+    "id": "11",
+    "nom": "Qualité et/ou titre de la personne bénéficiaire de la prestation",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "12",
+    "nom": "Prénom de la personne bénéficiaire de la prestation",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "13",
+    "nom": "Nom de la personne bénéficiaire de la prestation",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "14",
+    "nom": "Ligne 1 de la norme adresse postale du destinataire de la facture",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Qualité – Nom – Prénom – éventuellement titre ou profession du destinataire de la facture. Les items Qualité, Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces et éventuellement des ‘/’ pour séparer les zones Qualité, Nom et Prénom. Dans le cas, d’un nom de société, il n’est pas nécessaire d’utiliser des séparateurs. Page 41 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "15",
+    "nom": "Qualité et/ou titre de la personne destinataire de la facture",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "16",
+    "nom": "Prénom de la personne destinataire de la facture",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "17",
+    "nom": "Nom de la personne destinataire de la facture",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "18",
+    "nom": "Numéro de la facture",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "19",
+    "nom": "Numéro de client",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "1A",
+    "nom": "Numéro du contrat",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "1B",
+    "nom": "Identifiant du souscripteur du contrat",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. Page 42 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "1C",
+    "nom": "Date d’effet du contrat",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "1D",
+    "nom": "Montant TTC de la facture",
+    "min": "0",
+    "max": "16",
+    "nature": "Numérique",
+    "description": "Le montant est un nombre avec au plus deux décimales et peut être positif ou négatif. Il est encodé en utilisant uniquement des chiffres [0-9], au plus une virgule et au plus un tiret [,-]."
+  },
+  {
+    "id": "1E",
+    "nom": "Numéro de téléphone du bénéficiaire de la prestation",
+    "min": "0",
+    "max": "30",
+    "nature": "Numérique",
+    "description": "Il est encodé en utilisant uniquement des chiffres [0-9]. Il commence par le code international, par exemple 33177935210 pour encoder le numéro français 01.77.93.52.10."
+  },
+  {
+    "id": "1F",
+    "nom": "Numéro de téléphone du destinataire de la facture",
+    "min": "0",
+    "max": "30",
+    "nature": "Numérique",
+    "description": "Il est encodé en utilisant uniquement des chiffres [0-9]. Il commence par le code international, par exemple 33177935210 pour encoder le numéro français 01.77.93.52.10."
+  },
+  {
+    "id": "1G",
+    "nom": "Présence d’un co-bénéficiaire de la prestation non mentionné dans le code",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Permet d’indiquer la présence d’un ou plusieurs co-bénéficiaires de la prestation non mentionnés dans le code. Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai."
+  },
+  {
+    "id": "1H",
+    "nom": "Présence d’un co-destinataire de la facture non mentionné dans le code",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Permet d’indiquer la présence d’un ou plusieurs co-destinataires de la facture non mentionnés dans le code. Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai. Page 43 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "1I",
+    "nom": "Ligne 1 de la norme adresse postale du co-bénéficiaire de la prestation.",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Qualité – Nom – Prénom – éventuellement titre ou profession du co-bénéficiaire de la prestation. Les items Qualité, Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces et éventuellement des ‘/’ pour séparer les zones Qualité, Nom et Prénom. Dans le cas, d’un nom de société, il n’est pas nécessaire d’utiliser des séparateurs."
+  },
+  {
+    "id": "1J",
+    "nom": "Qualité et/ou titre du co-bénéficiaire de la prestation.",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "1K",
+    "nom": "Prénom du co-bénéficiaire de la prestation.",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "1L",
+    "nom": "Nom du co-bénéficiaire de la prestation.",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "1M",
+    "nom": "Ligne 1 de la norme adresse postale du co-destinataire de la facture.",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Qualité – Nom – Prénom – éventuellement titre ou profession du co-destinataire de la facture. Les items Qualité, Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces et éventuellement des ‘/’ pour séparer les zones Qualité, Nom et Prénom. Dans le cas, d’un nom de société, il n’est pas nécessaire d’utiliser des séparateurs. Page 44 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "1N",
+    "nom": "Qualité et/ou titre du co-destinataire de la facture.",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "1O",
+    "nom": "Prénom du co-destinataire de la facture.",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "1P",
+    "nom": "Nom du co-destinataire de la facture.",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "20",
+    "nom": "Ligne 2 de la norme adresse postale du point de service des prestations",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "21",
+    "nom": "Ligne 3 de la norme adresse postale du point de service des prestations",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "22",
+    "nom": "Ligne 4 de la norme adresse postale du point de service des prestations",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Numéro dans la voie + type et nom de la voie. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée. Page 45 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "23",
+    "nom": "Ligne 5 de la norme adresse postale du point de service des prestations",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Mention de distribution (BP) suivie du libellé de la localité de destination dans le cas où celle-ci serait différente du libellé cedex lieu-dit ou hameau. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "24",
+    "nom": "Code postal ou code cedex du point de service des prestations",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal)."
+  },
+  {
+    "id": "25",
+    "nom": "Localité de destination ou libellé cedex du point de service des prestations",
+    "min": "0",
+    "max": "32",
+    "nature": "Numérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "26",
+    "nom": "Pays de service des prestations",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2"
+  },
+  {
+    "id": "27",
+    "nom": "Ligne 2 de la norme adresse postale du destinataire de la facture",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en partie 2 de la norme."
+  },
+  {
+    "id": "28",
+    "nom": "Ligne 3 de la norme adresse postale du destinataire de la facture",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée. Page 46 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "29",
+    "nom": "Ligne 4 de la norme adresse postale du destinataire de la facture",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Numéro dans la voie + type et nom de la voie. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "2A",
+    "nom": "Ligne 5 de la norme adresse postale du destinataire de la facture",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Mention de distribution (BP) suivie du libellé de la localité de destination dans le cas où celle-ci serait différente du libellé cedex lieu-dit ou hameau. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "2B",
+    "nom": "Code postal ou code cedex du destinataire de la facture",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal)."
+  },
+  {
+    "id": "2C",
+    "nom": "Localité de destination ou libellé cedex du destinataire de la facture",
+    "min": "0",
+    "max": "32",
+    "nature": "Numérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "2D",
+    "nom": "Pays du destinataire de la facture",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2 Page 47 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.2. Identifiants de données bancaires"
+  },
+  {
+    "id": "30",
+    "nom": "Qualité Nom et Prénom.",
+    "min": "0",
+    "max": "140",
+    "nature": "Alphanumérique",
+    "description": "Les items Qualité, Nom et Prénom sont indiqués sans ordre prédéfini. L’utilisation du séparateur ‘/’ est possible ; dans ce cas, l’ordre est obligatoirement Qualité/Nom/Prénom. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] des espaces et éventuellement des ‘/’ pour séparer les zones Qualité, Nom et Prénom. Dans le cas, d’un nom de société, il n’est pas nécessaire d’utiliser des séparateurs."
+  },
+  {
+    "id": "31",
+    "nom": "Code IBAN",
+    "min": "14",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9] (cf. norme ISO 13616). S’il y a des espaces, ils sont retirés."
+  },
+  {
+    "id": "32",
+    "nom": "Code BIC/SWIFT",
+    "min": "8",
+    "max": "11",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres (cf. norme ISO 9362). Ce code peut faire 8 ou 11 caractères. Il n’est jamais complété par des caractères."
+  },
+  {
+    "id": "33",
+    "nom": "Code BBAN",
+    "min": "0",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. S’il y a des espaces, ils sont retirés."
+  },
+  {
+    "id": "34",
+    "nom": "Pays de localisation du compte",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2"
+  },
+  {
+    "id": "35",
+    "nom": "Identifiant SEPAmail (QXBAN)",
+    "min": "14",
+    "max": "34",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9] (cf. norme ISO 13616). S’il y a des espaces, ils sont retirés. Page 48 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "36",
+    "nom": "Date de début de période",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au nombre de jours écoulés depuis le 1er janvier 2000. Elle est encodée en hexadécimal en utilisant uniquement des lettres majuscules non accentuées [A-F] et des chiffres [0-9]."
+  },
+  {
+    "id": "40",
+    "nom": "Numéro fiscal",
+    "min": "13",
+    "max": "13",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. S’il y a des espaces, ils sont retirés."
+  },
+  {
+    "id": "41",
+    "nom": "Revenu fiscal de référence",
+    "min": "0",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette donnée est un nombre entier et est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "42",
+    "nom": "Situation du foyer",
+    "min": "0",
+    "max": "Aucune",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "43",
+    "nom": "Nombre de parts",
+    "min": "1",
+    "max": "5",
+    "nature": "Alphanumérique",
+    "description": "Le nombre de parts n’étant pas nécessairement un nombre entier, il est encodé en utilisant uniquement des chiffres [0-9] et le caractère « virgule » avec au plus deux décimales."
+  },
+  {
+    "id": "44",
+    "nom": "Référence d’avis d’impôt",
+    "min": "13",
+    "max": "13",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. S’il y a des espaces, ils sont retirés."
+  },
+  {
+    "id": "45",
+    "nom": "Année des revenus",
+    "min": "4",
+    "max": "4",
+    "nature": "Numérique",
+    "description": "Année des revenus sur laquelle porte l'impôt. Elle est encodée au format AAAA en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "46",
+    "nom": "Déclarant 1",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Nom et Prénom du déclarant 1. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces pour séparer le Nom et le Prénom. Page 50 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "47",
+    "nom": "Numéro fiscal du déclarant 1",
+    "min": "13",
+    "max": "13",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. S’il y a des espaces, ils sont retirés."
+  },
+  {
+    "id": "48",
+    "nom": "Déclarant 2",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Nom et Prénom du déclarant 2. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces pour séparer le Nom et le Prénom."
+  },
+  {
+    "id": "49",
+    "nom": "Numéro fiscal du déclarant 2",
+    "min": "13",
+    "max": "13",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. S’il y a des espaces, ils sont retirés."
+  },
+  {
+    "id": "4A",
+    "nom": "Date de mise en recouvrement",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "4B",
+    "nom": "Date de la déclaration",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "4C",
+    "nom": "Date d’enregistrement",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 51 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "4D",
+    "nom": "Montant du don (en €)",
+    "min": "0",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Le montant du don est un nombre entier. Cette donnée est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "4E",
+    "nom": "Montant des droits payés (en €)",
+    "min": "0",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Le montant du don est un nombre entier. Cette donnée est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "4F",
+    "nom": "Référence d’enregistrement",
+    "min": "15",
+    "max": "15",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "4G",
+    "nom": "Nom du donataire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces, et des symboles [-']."
+  },
+  {
+    "id": "4H",
+    "nom": "Nom(s) du(es) donateur(s)",
+    "min": "0",
+    "max": "77",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces, et des symboles [-'/]. Le caractère '/' peut être utilisé pour séparer le nom des deux donateurs."
+  },
+  {
+    "id": "4I",
+    "nom": "Montant Taxable (en €)",
+    "min": "0",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Le montant du don est un nombre entier. Cette donnée est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "4J",
+    "nom": "Montant de la cession (en €)",
+    "min": "0",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Le montant du don est un nombre entier. Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. Page 52 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "4K",
+    "nom": "Nom du cessionnaire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces, et des symboles [-‘@]."
+  },
+  {
+    "id": "4L",
+    "nom": "Nom du cédant",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces, et des symboles [-‘@]."
+  },
+  {
+    "id": "4M",
+    "nom": "Taux applicable",
+    "min": "0",
+    "max": "3",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9] et la virgule comme séparateur [,]."
+  },
+  {
+    "id": "4N",
+    "nom": "Nom et prénoms du déclarant",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Page 53 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "4O",
+    "nom": "Ligne 4 d’adresse du déclarant",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Numéro dans la voie + type et nom de la voie. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée."
+  },
+  {
+    "id": "4P",
+    "nom": "Code postal du déclarant",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal)."
+  },
+  {
+    "id": "4Q",
+    "nom": "Commune du déclarant",
+    "min": "0",
+    "max": "32",
+    "nature": "Alphabétique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "4R",
+    "nom": "SIP gestionnaire",
+    "min": "0",
+    "max": "30",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "4S",
+    "nom": "Millésime",
+    "min": "4",
+    "max": "4",
+    "nature": "Numérique",
+    "description": "L’année concernée. Cette date est composée uniquement de 4 chiffres au format AAAA où AAAA l’année."
+  },
+  {
+    "id": "4T",
+    "nom": "Administration cantonale suisse",
+    "min": "0",
+    "max": "30",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Page 54 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "4U",
+    "nom": "Dénomination sociale de l’employeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Page 55 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.4. Identifiants de données relatives à l’activité professionnelle"
+  },
+  {
+    "id": "50",
+    "nom": "SIRET de l’employeur",
+    "min": "14",
+    "max": "14",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "51",
+    "nom": "Nombre d’heures travaillées",
+    "min": "6",
+    "max": "6",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres et une virgule [0-9,]."
+  },
+  {
+    "id": "52",
+    "nom": "Cumul du nombre d’heures travaillées",
+    "min": "7",
+    "max": "7",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres et une virgule [0-9,]."
+  },
+  {
+    "id": "53",
+    "nom": "Début de période",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au nombre de jours écoulés depuis le 1er janvier 2000. Elle est encodée en hexadécimal en utilisant uniquement des lettres majuscules non accentuées [A-F] et des chiffres [0-9]."
+  },
+  {
+    "id": "54",
+    "nom": "Fin de période",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au nombre de jours écoulés depuis le 1er janvier 2000. Elle est encodée en hexadécimal en utilisant uniquement des lettres majuscules non accentuées [A-F] et des chiffres [0-9]."
+  },
+  {
+    "id": "55",
+    "nom": "Date de début de contrat",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 56 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "56",
+    "nom": "Date de fin de contrat",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au nombre de jours écoulés depuis le 1er janvier 2000. Elle est encodée en hexadécimal en utilisant uniquement des lettres majuscules non accentuées [A-F] et des chiffres [0-9]."
+  },
+  {
+    "id": "57",
+    "nom": "Date de signature du contrat",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "58",
+    "nom": "Salaire net imposable",
+    "min": "0",
+    "max": "11",
+    "nature": "Numérique",
+    "description": "Cette donnée est un nombre positif ou négatif. Elle est encodée en utilisant uniquement des chiffres [0-9], au plus une virgule et au plus un tiret [,-]."
+  },
+  {
+    "id": "59",
+    "nom": "Cumul du salaire net imposable",
+    "min": "0",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette donnée est un nombre positif ou négatif. Elle est encodée en utilisant uniquement des chiffres [0-9], au plus une virgule et au plus un tiret [,-]."
+  },
+  {
+    "id": "5A",
+    "nom": "Salaire brut du mois",
+    "min": "0",
+    "max": "11",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres et une virgule [0-9,]."
+  },
+  {
+    "id": "5B",
+    "nom": "Cumul du salaire brut",
+    "min": "0",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres et une virgule [0-9,]."
+  },
+  {
+    "id": "5C",
+    "nom": "Salaire net",
+    "min": "0",
+    "max": "11",
+    "nature": "Numérique",
+    "description": "Cette donnée est un nombre positif ou négatif. Elle est encodée en utilisant uniquement des chiffres [0-9], au plus une virgule et au plus un tiret [,-]. Page 57 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "5D",
+    "nom": "Ligne 2 de la norme adresse postale de l’employeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "5E",
+    "nom": "Ligne 3 de la norme adresse postale de l’employeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "5F",
+    "nom": "Ligne 4 de la norme adresse postale de l’employeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Numéro dans la voie + type et nom de la voie. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "5G",
+    "nom": "Ligne 5 de la norme adresse postale de l’employeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Mention de distribution (BP) suivie du libellé de la localité de destination dans le cas où celle-ci serait différente du libellé cedex lieu-dit ou hameau. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "5H",
+    "nom": "Code postal ou code cedex de l’employeur",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal). Page 58 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "5I",
+    "nom": "Localité de destination ou libellé cedex de l’employeur",
+    "min": "0",
+    "max": "32",
+    "nature": "Alphanumérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "5J",
+    "nom": "Pays de l’employeur",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2"
+  },
+  {
+    "id": "5K",
+    "nom": "Identifiant Cotisant Prestations Sociales",
+    "min": "0",
+    "max": "50",
+    "nature": "Alphanumérique",
+    "description": "Correspond en France au numéro URSSAF, au format de 18 chiffres."
+  },
+  {
+    "id": "5L",
+    "nom": "Numéro de SIRET ou RNA",
+    "min": "9",
+    "max": "14",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "5M",
+    "nom": "Dénomination sociale",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "5N",
+    "nom": "Numéro de dossier d'autorisation de travail",
+    "min": "21",
+    "max": "21",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "5O",
+    "nom": "Nom de l'employeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z] et des espaces. Page 59 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "5P",
+    "nom": "Prénom de l'employeur",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "5Q",
+    "nom": "Nom du déclarant",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "5R",
+    "nom": "Prénom du déclarant",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "5S",
+    "nom": "Fonction du déclarant",
+    "min": "0",
+    "max": "40",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "5T",
+    "nom": "Type de contrat de travail",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Le type est encodé de la manière suivante : Encodage Signification 0 CDD 1 CDI 2 CTT 3 CAP"
+  },
+  {
+    "id": "5U",
+    "nom": "Durée du contrat",
+    "min": "0",
+    "max": "12",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Page 60 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.5. Identifiants de données relatives aux titres d’identité"
+  },
+  {
+    "id": "60",
+    "nom": "Liste des prénoms",
+    "min": "0",
+    "max": "60",
+    "nature": "Alphanumérique",
+    "description": "Les prénoms composés sont séparés par un espace. Les différents prénoms sont séparés par ‘/’. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et des ‘/’ s’il y a plusieurs prénoms (au maximum 6)."
+  },
+  {
+    "id": "61",
+    "nom": "Prénom",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "Ce champ correspond au premier prénom de l’état civil ou au prénom d’usage. Les prénoms composés sont séparés par un espace. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "62",
+    "nom": "Nom patronymique",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "63",
+    "nom": "Nom d’usage",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "64",
+    "nom": "Nom d’épouse/époux",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "65",
+    "nom": "Type de pièce d’identité",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Carte d’identité (ID), titre de séjour (IR), visa (V), permis de conduire (D), passeport (P). Une lettre supplémentaire peut être ajoutée à la discrétion de l’Etat pour les passeports (selon leur type) et pour les visas Page 61 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "66",
+    "nom": "Numéro de la pièce d’identité",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "67",
+    "nom": "Nationalité",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2"
+  },
+  {
+    "id": "68",
+    "nom": "Genre",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "Genre masculin (M) ou féminin (F)."
+  },
+  {
+    "id": "69",
+    "nom": "Date de naissance",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Lorsque le jour ou le jour et le mois ne sont pas connus, leurs valeurs sont remplacées par 00."
+  },
+  {
+    "id": "6A",
+    "nom": "Lieu de naissance",
+    "min": "0",
+    "max": "32",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "6B",
+    "nom": "Département du bureau émetteur",
+    "min": "3",
+    "max": "3",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "6C",
+    "nom": "Pays de naissance",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2 Page 62 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "6D",
+    "nom": "Nom et prénom du père",
+    "min": "0",
+    "max": "60",
+    "nature": "Alphanumérique",
+    "description": "Les items Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces et éventuellement des ‘/’ pour séparer les zones Nom et Prénom."
+  },
+  {
+    "id": "6E",
+    "nom": "Nom et prénom de la mère",
+    "min": "0",
+    "max": "60",
+    "nature": "Alphanumérique",
+    "description": "Les items Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces et éventuellement des ‘/’ pour séparer les zones Nom et Prénom."
+  },
+  {
+    "id": "6F",
+    "nom": "Machine Readable Zone (Zone de Lecture Automatique, ZLA)",
+    "min": "0",
+    "max": "90",
+    "nature": "Alphanumérique",
+    "description": "< pour séparer les champs mais encodé en C40 comme un espace. Cette donnée est encodée en utilisant des majuscules non accentuées, des chiffres et des espaces [A- Z0-9 ]."
+  },
+  {
+    "id": "6G",
+    "nom": "Nom",
+    "min": "1",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "6H",
+    "nom": "Civilité",
+    "min": "1",
+    "max": "10",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "6I",
+    "nom": "Pays émetteur",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2 Page 63 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "6J",
+    "nom": "Type de document étranger",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Trois choix sont possibles : Encodage Signification 1 Attestation de dépôt d'une demande de titre de séjour 2 Attestation de prolongation d'instruction d'une demande de titre de séjour 3 Attestation favorable de décision d'une demande de titre de séjour 4 Attestation de dépôt d’un document de circulation pour étranger mineur 5 Document de circulation pour étranger mineur"
+  },
+  {
+    "id": "6K",
+    "nom": "Numéro de la demande de document étranger",
+    "min": "19",
+    "max": "19",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "6L",
+    "nom": "Date de dépôt de la demande",
+    "min": "8",
+    "max": "8",
+    "nature": "Alphanumérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "6M",
+    "nom": "Catégorie du titre",
+    "min": "0",
+    "max": "40",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "6N",
+    "nom": "Date de début de validité",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "6O",
+    "nom": "Date de fin de validité",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 64 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "6P",
+    "nom": "Autorisation",
+    "min": "0",
+    "max": "40",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "6Q",
+    "nom": "Numéro d’étranger",
+    "min": "0",
+    "max": "10",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "6R",
+    "nom": "Numéro de visa",
+    "min": "12",
+    "max": "12",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "6S",
+    "nom": "Ligne 2 de l'adresse postale du domicile",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée"
+  },
+  {
+    "id": "6T",
+    "nom": "Ligne 3 de l'adresse postale du domicile",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée."
+  },
+  {
+    "id": "6U",
+    "nom": "Ligne 4 de l'adresse postale du domicile",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Numéro dans la voie + type et nom de la voie. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée. Page 65 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "6V",
+    "nom": "Ligne 5 de l'adresse postale du domicile",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Mention de distribution (BP) suivie du libellé de la localité de destination dans le cas où celle-ci serait différente du libellé cedex lieu-dit ou hameau. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée."
+  },
+  {
+    "id": "6W",
+    "nom": "Code postal ou code cedex de l'adresse postale du domicile",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal)."
+  },
+  {
+    "id": "6X",
+    "nom": "Commune de l'adresse postale du domicile",
+    "min": "0",
+    "max": "32",
+    "nature": "Alphabétique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "6Y",
+    "nom": "Code pays de l'adresse postale du domicile",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphabétique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2"
+  },
+  {
+    "id": "6Z",
+    "nom": "Numéro d'étranger de l'autorisation de travail",
+    "min": "9",
+    "max": "11",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. Page 66 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.6. Identifiants de données relatives aux données de santé"
+  },
+  {
+    "id": "70",
+    "nom": "Date et heure du décès",
+    "min": "12",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 12 chiffres au format JJMMAAAAHHmm où JJ représente le jour dans le mois, MM le mois, AAAA l’année, HH l’heure et mm les minutes. Le jour, le numéro du mois, l’heure et les minutes sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "71",
+    "nom": "Date et heure du constat de décès",
+    "min": "12",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 12 chiffres au format JJMMAAAAHHmm où JJ représente le jour dans le mois, MM le mois, AAAA l’année, HH l’heure et mm les minutes. Le jour, le numéro du mois, l’heure et les minutes sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "72",
+    "nom": "Nom du défunt",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "73",
+    "nom": "Prénoms du défunt",
+    "min": "0",
+    "max": "60",
+    "nature": "Alphanumérique",
+    "description": "Les prénoms composés sont séparés par un espace. Les différents prénoms sont séparés par ‘/’. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et des ‘/’ s’il y a plusieurs prénoms (au maximum 6)."
+  },
+  {
+    "id": "74",
+    "nom": "Nom de jeune fille du défunt",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace. Page 67 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "75",
+    "nom": "Date de naissance du défunt",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Lorsque le jour ou le jour et le mois ne sont pas connus, leurs valeurs sont remplacées par 00."
+  },
+  {
+    "id": "76",
+    "nom": "Genre du défunt",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "Genre masculin (M) ou féminin (F)."
+  },
+  {
+    "id": "77",
+    "nom": "Commune de décès",
+    "min": "0",
+    "max": "45",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "78",
+    "nom": "Code postal de la commune de décès",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal)."
+  },
+  {
+    "id": "79",
+    "nom": "Adresse du domicile du défunt",
+    "min": "0",
+    "max": "114",
+    "nature": "Alphanumérique",
+    "description": "Ce champ peut contenir plusieurs lignes d’adresse. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "7A",
+    "nom": "Code postal du domicile du défunt",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal). Page 68 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "7B",
+    "nom": "Commune du domicile du défunt",
+    "min": "0",
+    "max": "45",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "7C",
+    "nom": "Obstacle médico-légal",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai."
+  },
+  {
+    "id": "7D",
+    "nom": "Mise en bière",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est représentée par un caractère : O = Pas de mise en bière, S = Mise en bière dans un cercueil simple, H = Mise en bière dans un cercueil hermétique."
+  },
+  {
+    "id": "7E",
+    "nom": "Obstacle aux soins de conservation",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai."
+  },
+  {
+    "id": "7F",
+    "nom": "Obstacle aux dons du corps",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai."
+  },
+  {
+    "id": "7G",
+    "nom": "Recherche de la cause du décès",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai."
+  },
+  {
+    "id": "7H",
+    "nom": "Délai de transport du corps",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "L’entier correspondant à cette donnée est encodée en hexadécimal préfixé par des 0 si nécessaire. Cette donnée est encodée en utilisant [0-9A-F]."
+  },
+  {
+    "id": "7I",
+    "nom": "Prothèse avec pile",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai. Page 69 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "7J",
+    "nom": "Retrait de la pile de prothèse",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai."
+  },
+  {
+    "id": "7K",
+    "nom": "Code NNC",
+    "min": "13",
+    "max": "13",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "7L",
+    "nom": "Code FINESS de l'organisme agréé",
+    "min": "9",
+    "max": "9",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "7M",
+    "nom": "Identification du médecin",
+    "min": "0",
+    "max": "64",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée contient soit un nom/prénom de médecin, soit un code d’identification du médecin. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "7N",
+    "nom": "Lieu de validation du certificat de décès",
+    "min": "0",
+    "max": "128",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée contient la localisation de la signature du certificat de décès dont le format est variable : par exemple une adresse complète, un nom de commune, un nom d’établissement, etc. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "7O",
+    "nom": "Certificat de décès supplémentaire",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée indique si une copie du certificat de décès a été fournie. Cette donnée est représentée par un numérique : 0 = faux et 1 = vrai."
+  },
+  {
+    "id": "7P",
+    "nom": "Identifiant du certificat",
+    "min": "16",
+    "max": "16",
+    "nature": "Alphanumérique",
+    "description": "Identifiant du certificat de décès. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. Page 70 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.7. Identifiants relatifs aux activités professionnelles"
+  },
+  {
+    "id": "80",
+    "nom": "Nom",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "81",
+    "nom": "Prénoms",
+    "min": "0",
+    "max": "60",
+    "nature": "Alphanumérique",
+    "description": "Les prénoms composés sont séparés par un espace. Les différents prénoms sont séparés par ‘/’. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et des ‘/’ s’il y a plusieurs prénoms (au maximum 6)."
+  },
+  {
+    "id": "82",
+    "nom": "Numéro de carte",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "83",
+    "nom": "Organisme de tutelle",
+    "min": "0",
+    "max": "40",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "84",
+    "nom": "Profession",
+    "min": "0",
+    "max": "40",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "85",
+    "nom": "Numéro de permis de chasser",
+    "min": "17",
+    "max": "17",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des caractères ‘-‘. Le numéro du permis est de la forme XXXXXXXXXXXX-XX-X. Page 71 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "86",
+    "nom": "Numéro de licence",
+    "min": "12",
+    "max": "12",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. Page 72 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.8. Identifiants relatifs aux données juridiques/judiciaires"
+  },
+  {
+    "id": "90",
+    "nom": "Identité de l'huissier de justice",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "L’Identité est séparée en Civilité (ou Titre), le Nom et le Prénom. Les éléments Civilité, Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et éventuellement des ‘/’ pour séparer les zones Civilité, Nom et Prénom."
+  },
+  {
+    "id": "91",
+    "nom": "Identité ou raison sociale du demandeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "L’Identité est séparée en Civilité, le Nom et le Prénom. Les éléments Civilité, Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et éventuellement des ‘/’ pour séparer les zones Civilité, Nom et Prénom. Dans le cas d’un nom de société, il n’est pas nécessaire d’utiliser des séparateurs."
+  },
+  {
+    "id": "92",
+    "nom": "Identité ou raison sociale du destinataire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "L’Identité est séparée en Civilité, le Nom et le Prénom. Les éléments Civilité, Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et éventuellement des ‘/’ pour séparer les zones Civilité, Nom et Prénom. Dans le cas d’un nom de société, il n’est pas nécessaire d’utiliser des séparateurs."
+  },
+  {
+    "id": "93",
+    "nom": "Identité ou raison sociale de tiers concerné",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "L’Identité est séparée en Civilité, le Nom et le Prénom. Les éléments Civilité, Nom et Prénom doivent être indiqués dans cet ordre et peuvent être séparés par le caractère ‘/’ pour faciliter leur lecture. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et éventuellement des ‘/’ pour séparer les zones Civilité, Nom et Prénom. Dans le cas d’un nom de société, il n’est pas nécessaire d’utiliser des séparateurs. Page 73 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "94",
+    "nom": "Intitulé de l'acte",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces."
+  },
+  {
+    "id": "95",
+    "nom": "Numéro de l'acte",
+    "min": "0",
+    "max": "18",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "96",
+    "nom": "Date de signature de l'acte",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Page 74 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.9. Identifiants de données relatives aux véhicules"
+  },
+  {
+    "id": "A0",
+    "nom": "Pays ayant émis l’immatriculation du véhicule.",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2"
+  },
+  {
+    "id": "A1",
+    "nom": "Immatriculation du véhicule",
+    "min": "0",
+    "max": "17",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au champ A du certificat d’immatriculation. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces ou des tirets ‘-‘."
+  },
+  {
+    "id": "A2",
+    "nom": "Marque du véhicule.",
+    "min": "0",
+    "max": "17",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au champ D.1 du certificat d’immatriculation. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] ou des espaces."
+  },
+  {
+    "id": "A3",
+    "nom": "Nom commercial du véhicule.",
+    "min": "0",
+    "max": "17",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au champ D.3 du certificat d’immatriculation. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] ou des espaces."
+  },
+  {
+    "id": "A4",
+    "nom": "Numéro de série du véhicule (VIN).",
+    "min": "17",
+    "max": "17",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au champ E du certificat d’immatriculation. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. Des espaces peuvent être utilisés pour suffixer les numéros de série ayant une taille inférieure à la taille du champ."
+  },
+  {
+    "id": "A5",
+    "nom": "Catégorie du véhicule.",
+    "min": "3",
+    "max": "3",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est extraite du champ J du certificat d’immatriculation. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Page 75 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "A6",
+    "nom": "Carburant.",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est extraite du champ P.3 du certificat d’immatriculation. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "A7",
+    "nom": "Taux d’émission de CO2 du véhicule (en g/km).",
+    "min": "3",
+    "max": "3",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée correspond au champ V.7 du certificat d’immatriculation. L’entier correspondant à cette donnée est encodée en hexadécimal préfixé par des 0 si nécessaire. Cette donnée est encodée en utilisant [0-9A-F]."
+  },
+  {
+    "id": "A8",
+    "nom": "Indication de la classe environnementale de réception CE.",
+    "min": "0",
+    "max": "12",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est extraite du champ V.9 du certificat d’immatriculation. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces et des barres obliques ‘/’."
+  },
+  {
+    "id": "A9",
+    "nom": "Classe d’émission polluante.",
+    "min": "3",
+    "max": "3",
+    "nature": "Alphanumérique",
+    "description": "Le champ classe d’émission polluante contient un agrégat de 3 valeurs chacune encodée sur un caractère alphanumérique majuscules sans accents dans l’ordre suivant : Le premier caractère indique la version de la spécification concernant la classe d’émission polluante. Actuellement, deux versions sont définies et autorisées : la version initiale à 0 et la version 1 (pouvant être utilisé dans le certificat de qualité de l’air v2). Le second caractère indique la classe du véhicule lui-même Le troisième caractère indique le motif de sur-classement du véhicule. Pour la version initiale, les valeurs possibles pour la classe du véhicule (du moins polluant au plus polluant) sont les suivantes : Encodage Signification E Véhicule électrique 1 Classe 1 2 Classe 2 3 Classe 3 4 Classe 4 5 Classe 5 6 Classe 6 Page 76 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses La version initiale ne définit aucun motif de sur-classement du véhicule, donc la seule valeur autorisée est 0 indiquant l’absence de motif. Dans le cadre de la version 1, seule la valeur autorisée est 0 également, mais le motif de sur-classement doit être précisé dans un champ supplémentaire dont l’ID est AM."
+  },
+  {
+    "id": "AA",
+    "nom": "Date de première immatriculation du véhicule.",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette donnée correspond au champ B du certificat d’immatriculation. Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "AB",
+    "nom": "Type de lettre",
+    "min": "0",
+    "max": "8",
+    "nature": "Alphanumérique",
+    "description": "Caractères autorisés (A-Z0-9)"
+  },
+  {
+    "id": "AC",
+    "nom": "N° Dossier",
+    "min": "0",
+    "max": "19",
+    "nature": "Alphanumérique",
+    "description": "Caractères autorisés (A-Z0-9)"
+  },
+  {
+    "id": "AD",
+    "nom": "Date Infraction",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Date de l’infraction (nombre de jours après le 01/01/2000 encodée en hexadécimal)."
+  },
+  {
+    "id": "AE",
+    "nom": "Heure de l’infraction",
+    "min": "4",
+    "max": "4",
+    "nature": "Numérique",
+    "description": "Heure au format HHmm éventuellement préfixé par des 0."
+  },
+  {
+    "id": "AF",
+    "nom": "Nombre de points retirés lors de l’infraction",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "Valeur entre 0 à 35 points. Encodée en base 36 (0-9A-Z)"
+  },
+  {
+    "id": "AG",
+    "nom": "Solde de points",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "Valeur entre 0 à 35 points. Encodée en base 36 (0-9A-Z) Page 77 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "AH",
+    "nom": "Numéro de la carte",
+    "min": "0",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "AI",
+    "nom": "Date d’expiration initiale",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "AJ",
+    "nom": "Numéro EVTC",
+    "min": "13",
+    "max": "13",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "AK",
+    "nom": "Numéro de macaron",
+    "min": "7",
+    "max": "7",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. La valeur numérique est préfixée par des 0 si nécessaire."
+  },
+  {
+    "id": "AL",
+    "nom": "Numéro de la carte",
+    "min": "11",
+    "max": "11",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "AM",
+    "nom": "Motif de sur-classement",
+    "min": "0",
+    "max": "5",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Lorsque ce champ est présent mais vide, cela signifie qu’il n’y a aucun motif de sur-classement."
+  },
+  {
+    "id": "AN",
+    "nom": "Kilométrage",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. La valeur numérique est préfixée par des 0 si nécessaire. Page 78 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "AO",
+    "nom": "Numéro d’identification",
+    "min": "6",
+    "max": "6",
+    "nature": "Numérique",
+    "description": "L’entier correspondant à cette donnée est encodée en décimal préfixé par des 0 si nécessaire. Cette donnée est encodée en utilisant [0-9]."
+  },
+  {
+    "id": "AP",
+    "nom": "Type d’engin",
+    "min": "0",
+    "max": "60",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "AQ",
+    "nom": "Numéro de série",
+    "min": "0",
+    "max": "25",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "AR",
+    "nom": "Modèle",
+    "min": "0",
+    "max": "35",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "AS",
+    "nom": "Couleur dominante",
+    "min": "0",
+    "max": "10",
+    "nature": "Alphabétique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "AT",
+    "nom": "Type de propriétaire",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Deux choix sont possibles : • 1 = Personne physique • 2 = Personne morale"
+  },
+  {
+    "id": "AU",
+    "nom": "Ligne 2 de l'adresse postale du propriétaire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée Page 79 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "AV",
+    "nom": "Ligne 3 de l'adresse postale du propriétaire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée."
+  },
+  {
+    "id": "AW",
+    "nom": "Ligne 4 de l'adresse postale du propriétaire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Numéro dans la voie + type et nom de la voie. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée."
+  },
+  {
+    "id": "AX",
+    "nom": "Ligne 5 de l'adresse postale du propriétaire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Mention de distribution (BP) suivie du libellé de la localité de destination dans le cas où celle-ci serait différente du libellé cedex lieu-dit ou hameau. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en annexe 11 de la norme en cas de dépassement de la donnée."
+  },
+  {
+    "id": "AY",
+    "nom": "Code postal ou code cedex de l'adresse postale du propriétaire",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal)."
+  },
+  {
+    "id": "AZ",
+    "nom": "Commune de l'adresse postale du propriétaire",
+    "min": "0",
+    "max": "32",
+    "nature": "Alphabétique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Page 80 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.10. Identifiants de données pour les justificatifs académiques"
+  },
+  {
+    "id": "B0",
+    "nom": "Liste des prénoms",
+    "min": "0",
+    "max": "60",
+    "nature": "Alphanumérique",
+    "description": "Les prénoms composés sont séparés par un espace. Les différents prénoms sont séparés par '/'. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et des '/' s'il y a plusieurs prénoms (au maximum 6)."
+  },
+  {
+    "id": "B1",
+    "nom": "Prénom",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "Ce champ correspond au premier prénom de l'état civil ou au prénom d'usage. Les prénoms composés sont séparés par un espace. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "B2",
+    "nom": "Nom patronymique",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "B3",
+    "nom": "Nom d'usage",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "B4",
+    "nom": "Nom d'épouse/époux",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "B5",
+    "nom": "Nationalité",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2"
+  },
+  {
+    "id": "B6",
+    "nom": "Genre",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "Genre masculin (M) ou féminin (F) ou autre (X). Page 81 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "B7",
+    "nom": "Date de naissance",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l'année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Lorsque le jour ou le jour et le mois ne sont pas connus, leurs valeurs sont remplacées par 00."
+  },
+  {
+    "id": "B8",
+    "nom": "Lieu de naissance",
+    "min": "0",
+    "max": "32",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "B9",
+    "nom": "Pays de naissance",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2"
+  },
+  {
+    "id": "BA",
+    "nom": "Mention obtenue",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "0 aucune 1 Passable 2 Assez Bien 3 Bien 4 Très Bien 5 Très Honorable 6 Félicitations du jury"
+  },
+  {
+    "id": "BB",
+    "nom": "Numéro ou code d'identification de l'étudiant",
+    "min": "0",
+    "max": "50",
+    "nature": "Alphanumérique",
+    "description": "Correspond en France au numéro INE, ou à défaut d'un numéro interne à l'établissement mentionné sur le diplôme. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "BC",
+    "nom": "Numéro du diplôme",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "BD",
+    "nom": "Niveau du diplôme selon la classification CEC",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Entre autres: Bac=4, BTS/DUT=5, Licence=6, Master=7, Doctorat=8 Page 82 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "BE",
+    "nom": "Crédits ECTS obtenus",
+    "min": "3",
+    "max": "3",
+    "nature": "Numérique",
+    "description": "Entier positif."
+  },
+  {
+    "id": "BF",
+    "nom": "Année universitaire",
+    "min": "3",
+    "max": "3",
+    "nature": "Numérique",
+    "description": "Pour l’année 2015-2016, l’année 2016 est encodée dans le champ au format hexadécimal. Les caractères encodés autorisés sont donc les chiffres [0-9] et les lettres [A-F]."
+  },
+  {
+    "id": "BG",
+    "nom": "Type de diplôme",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Type de diplôme : BR = Brevet des Collèges CA = Certificat d'Aptitude Professionnelle (CAP) BE = Brevet d'Etudes Professionnelles (BEP) BA = Baccalauréat Général BP = Baccalauréat Professionnel BS = Baccalauréat Technologique BT = Brevet Technicien Supérieur (BTS) DU = Diplôme Universitaire de Technologie (DUT) LC = Licence LP = Licence Professionnelle DE = Diplôme Européen d'Etudes Supérieures (DEES) MA = Master MB = Maîtrise en Administration des Affaires (MBA) IN = Diplôme d'Ingénieur DR = Doctorat"
+  },
+  {
+    "id": "BH",
+    "nom": "Domaine",
+    "min": "0",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "BI",
+    "nom": "Mention",
+    "min": "0",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Page 83 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "BJ",
+    "nom": "Spécialité",
+    "min": "0",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "BK",
+    "nom": "Numéro de l'Attestation de versement de la CVE",
+    "min": "14",
+    "max": "14",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des tirets [-]. Page 84 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.11. Identifiants de données relatives au certificat de cession électronique"
+  },
+  {
+    "id": "C0",
+    "nom": "Genre du vendeur",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "Genre masculin (M) ou féminin (F)."
+  },
+  {
+    "id": "C1",
+    "nom": "Nom patronymique du vendeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "C2",
+    "nom": "Prénom du vendeur",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les prénoms composés sont séparés par un espace."
+  },
+  {
+    "id": "C3",
+    "nom": "Date et heure de la cession",
+    "min": "12",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 12 chiffres au format JJMMAAAAHHmm où JJ représente le jour dans le mois, MM le mois, AAAA l’année, HH l’heure et mm les minutes. Le jour, le numéro du mois, l’heure et les minutes sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "C4",
+    "nom": "Date de la signature du vendeur",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Lorsque le jour ou le jour et le mois ne sont pas connus, leurs valeurs sont remplacées par 00."
+  },
+  {
+    "id": "C5",
+    "nom": "Genre de l’acheteur",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "Genre masculin (M) ou féminin (F). Page 85 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "C6",
+    "nom": "Nom patronymique de l’acheteur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "C7",
+    "nom": "Prénom de l’acheteur",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les prénoms composés sont séparés par un espace."
+  },
+  {
+    "id": "C8",
+    "nom": "Ligne 4 de la norme adresse postale du domicile de l’acheteur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Numéro dans la voie + type et nom de la voie. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Il faut utiliser les méthodes de compression définies en section 11.2 du document en cas de dépassement de la donnée."
+  },
+  {
+    "id": "C9",
+    "nom": "Code postal ou code cedex du domicile de l’acheteur",
+    "min": "5",
+    "max": "5",
+    "nature": "Numérique",
+    "description": "Compris dans la ligne 6 de la norme adresse postale. Cette donnée est encodée en utilisant uniquement des chiffres ou des espaces si la donnée n’est pas renseignée (par exemple, dans le cas d’un pays ne disposant pas de code postal)."
+  },
+  {
+    "id": "CA",
+    "nom": "Commune du domicile de l’acheteur",
+    "min": "0",
+    "max": "45",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "CB",
+    "nom": "N° d’enregistrement",
+    "min": "10",
+    "max": "10",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. La valeur numérique est préfixée par des 0 si nécessaire. Page 86 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "CC",
+    "nom": "Date et heure d'enregistrement dans le SIV",
+    "min": "12",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 12 chiffres au format JJMMAAAAHHmm où JJ représente le jour dans le mois, MM le mois, AAAA l’année, HH l’heure et mm les minutes. Le jour, le numéro du mois, l’heure et les minutes sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 87 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.12. Identifiants de données relatives aux autorisations douanières"
+  },
+  {
+    "id": "D0",
+    "nom": "Référence RTC",
+    "min": "17",
+    "max": "17",
+    "nature": "Alphanumérique",
+    "description": "Référence unique du document RTC (Renseignement Tarifaire Contraignant) Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et le caractère '-' pour séparer les sous-champs. Le format de ce champ est : XX-XXX-XXXX-XXXXX Ex : FR-BTI-2020-XXXXX"
+  },
+  {
+    "id": "D1",
+    "nom": "Nom du titulaire",
+    "min": "0",
+    "max": "50",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9], des espaces (‘ ’), des tirets (' - '), des apostrophes (' ' ') et des points (‘.’)."
+  },
+  {
+    "id": "D2",
+    "nom": "EORI",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "L’EORI (Economic Operator Registration and Identification) est encodé en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. Le format exact est : Code Pays sur 2 car + n car numériques Le code pays respecte la norme ISO 3166-1 Alpha 2 NB : un opérateur étranger pouvant déposer une demande de RTC en France, il incombe d'élargir la taille du EORI (fixé à 17 car en France)"
+  },
+  {
+    "id": "D3",
+    "nom": "Date de début de validité",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Date de début de validité du document. Cette date est composée uniquement de 8 chiffres au format AAAAMMMJJ où AAAA représente l’année, MM le mois et JJ le jour. Le numéro de mois et le jour sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 88 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "D4",
+    "nom": "Date de fin de validité",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Date de début de validité du document. Cette date est composée uniquement de 8 chiffres au format AAAAMMMJJ où AAAA représente l’année, MM le mois et JJ le jour. Le numéro de mois et le jour sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "D5",
+    "nom": "Code marchandise",
+    "min": "8",
+    "max": "10",
+    "nature": "Alphanumérique",
+    "description": "Code de la marchandise importée. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]"
+  },
+  {
+    "id": "D6",
+    "nom": "Numéro de décision",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Numéro de décision attribuée par la DGDDI Cette donnée de 8 caractères est encodée en utilisant uniquement des chiffres [0-9]"
+  },
+  {
+    "id": "D7",
+    "nom": "Date de décision",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Date de décision de la DGDDI. Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour, MM le mois et AAAA représente l’année. Le numéro de jour et de mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "D8",
+    "nom": "Durée de validité",
+    "min": "2",
+    "max": "2",
+    "nature": "Numérique",
+    "description": "Durée de validité du document. Cette durée est exprimée en nombre de mois. Cette donnée de 2 caractères (préfixés par 0 si nécessaire) est encodée en utilisant uniquement des chiffres [0-9] Page 89 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "D9",
+    "nom": "Date de fin de validité de la licence",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Date de décision de la DGDDI. Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour, MM le mois et AAAA représente l’année. Le numéro de jour et de mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "DA",
+    "nom": "Numéro de licence",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Numéro de la licence émise par la DGDDI Cette donnée de 8 caractères est encodée en utilisant uniquement des chiffres [0-9]"
+  },
+  {
+    "id": "DB",
+    "nom": "Nom de l’expéditeur",
+    "min": "0",
+    "max": "50",
+    "nature": "Alphanumérique",
+    "description": "Nom de l’expéditeur des armes/munitions Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentués [A-Z] et des espaces (‘ ‘)"
+  },
+  {
+    "id": "DC",
+    "nom": "Prénom de l’expéditeur",
+    "min": "0",
+    "max": "50",
+    "nature": "Alphanumérique",
+    "description": "Prénom de l’expéditeur des armes/munitions Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentués [A-Z] et des espaces (‘ ‘)"
+  },
+  {
+    "id": "DD",
+    "nom": "Date de naissance de l’expéditeur",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Date de naissance de l’expéditeur. Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour, MM le mois et AAAA représente l’année. Le numéro de jour et de mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 90 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "DE",
+    "nom": "Raison sociale de l’expéditeur",
+    "min": "0",
+    "max": "50",
+    "nature": "Alphanumérique",
+    "description": "Raison sociale de la société expéditrice des armes/munitions Cette donnée est encodée en utilisant des lettres majuscules non accentués [A-Z] et des chiffres [0-9] et des espaces (‘ ’)"
+  },
+  {
+    "id": "DF",
+    "nom": "SIREN de l’expéditeur",
+    "min": "9",
+    "max": "9",
+    "nature": "Numérique",
+    "description": "SIREN de la société expéditrice des armes/munitions Cette donnée de 9 caractères est encodée en utilisant uniquement des chiffres [0-9]"
+  },
+  {
+    "id": "DG",
+    "nom": "SIRET de l’expéditeur",
+    "min": "14",
+    "max": "14",
+    "nature": "Numérique",
+    "description": "SIRET de la société expéditrice des armes/munitions Cette donnée de 14 caractères est encodée en utilisant uniquement des chiffres [0-9]"
+  },
+  {
+    "id": "DH",
+    "nom": "EORI de l’expéditeur",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "L’EORI (Economic Operator Registration and Identification) de la société expéditrice est encodé en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9] Le format exact est : Code Pays sur 2 car + Identifiant unique de la société expéditrice dans ce pays (chaîne de caractères de longueur variable suivant le pays) Le code pays respecte la norme ISO 3166-1 Alpha 2"
+  },
+  {
+    "id": "DI",
+    "nom": "TIN de l’expéditeur",
+    "min": "4",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Le TIN (Tax Identification Number ou numéro d’identification fiscale européen) de la société expéditrice est encodé en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. Page 91 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "DO",
+    "nom": "SIRET de l’exportateur",
+    "min": "14",
+    "max": "14",
+    "nature": "Numérique",
+    "description": "SIRET de la société exportatrice des armes/munitions Cette donnée de 14 caractères est encodée en utilisant uniquement des chiffres [0-9]"
+  },
+  {
+    "id": "DP",
+    "nom": "EORI de l’exportateur",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "L’EORI (Economic Operator Registration and Identification) de la société exportatrice est encodé en utilisant uniquement des lettres majuscules non accentuées [A-Z] etdes chiffres [0-9] . Le format exact est : Code Pays sur 2 car + Identifiant unique de la société exportatrice dans ce pays (chaîne de caractères de longueur variable suivant le pays). Le code pays respecte la norme ISO 3166-1 Alpha 2"
+  },
+  {
+    "id": "DQ",
+    "nom": "Nom du destinataire",
+    "min": "0",
+    "max": "50",
+    "nature": "Alphanumérique",
+    "description": "Nom du destinataire des armes Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentués [A-Z] et des espaces (‘ ’)"
+  },
+  {
+    "id": "DR",
+    "nom": "Prénom du destinataire",
+    "min": "0",
+    "max": "50",
+    "nature": "Alphanumérique",
+    "description": "Prénom du destinataire des armes Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentués [A-Z] et des espaces (‘ ’)"
+  },
+  {
+    "id": "DS",
+    "nom": "Date de naissance du destinataire",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Date de naissance du destinataire Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour, MM le mois et AAAA représente l’année. Le numéro de jour et de mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 93 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "DY",
+    "nom": "Nombre de lignes articles",
+    "min": "3",
+    "max": "3",
+    "nature": "Numérique",
+    "description": "Nombre de lignes d’articles concernés par le transfert/importation/exportation Cette donnée de 3 caractères (préfixés par 0 si nécessaire) est encodée en utilisant uniquement des chiffres [0-9]"
+  },
+  {
+    "id": "DZ",
+    "nom": "Numéro du bon de livraison",
+    "min": "0",
+    "max": "10",
+    "nature": "Alphanumérique",
+    "description": "Identifiant du bon de livraison. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "H0",
+    "nom": "Commune de l'expéditeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphabétique",
+    "description": "Commune de la société expéditrice des marchandises. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "H1",
+    "nom": "Pays de l'expéditeur",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Pays de la société expéditrice des marchandises. Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2."
+  },
+  {
+    "id": "H2",
+    "nom": "Commune du destinataire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphabétique",
+    "description": "Commune de la société destinatrice des marchandises. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces."
+  },
+  {
+    "id": "H3",
+    "nom": "Pays du destinataire",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Pays de la société destinatrice des marchandises. Le pays est encodé en utilisant son code pays au format ISO3166-1 Alpha 2. Page 95 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "H4",
+    "nom": "Date de départ",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Date de départ des marchandises. Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l'année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "H5",
+    "nom": "Date prévisionnelle d’arrivée",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Date prévisionnelle d’arrivée à destination des marchandises. Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l'année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire."
+  },
+  {
+    "id": "H6",
+    "nom": "Numéro de plomb",
+    "min": "0",
+    "max": "40",
+    "nature": "Numérique",
+    "description": "Identifiant du plomb. Numéro optionnel du plomb apposé sur la marchandise. Cette donnée, pouvant atteindre 40 caractères, est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "H7",
+    "nom": "Codes douaniers",
+    "min": "0",
+    "max": "53",
+    "nature": "Alphanumérique",
+    "description": "Liste des codes douaniers distincts des marchandises. Chaque code est encodée en utilisant uniquement des chiffres [0-9]. Jusqu’à 6 codes peuvent être spécifiés en utilisant le caractère slash « / » comme séparateur."
+  },
+  {
+    "id": "H8",
+    "nom": "Nombre d’emballages articles",
+    "min": "7",
+    "max": "7",
+    "nature": "Numérique",
+    "description": "Nombre de d’emballages articles concernés par le transfert/importation/exportation. Cette donnée de 7 caractères (préfixés par 0 si nécessaire) est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "H9",
+    "nom": "Poids brut articles",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Poids brut des articles concernés par le transfert/importation/exportation. Cette donnée de 8 caractères (préfixés par 0 si nécessaire) est encodée en utilisant uniquement des chiffres [0-9]. Page 96 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "HA",
+    "nom": "Poids net articles",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Poids net des articles concernés par le transfert/importation/exportation. Cette donnée de 8 caractères (préfixés par 0 si nécessaire) est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "HB",
+    "nom": "Valeur douanière articles",
+    "min": "9",
+    "max": "9",
+    "nature": "Numérique",
+    "description": "Valeur douanière des articles concernés par le transfert/importation/exportation. Cette donnée de 9 caractères (préfixés par 0 si nécessaire) est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "HC",
+    "nom": "But de la livraison",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "But de la livraison des marchandises. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "HD",
+    "nom": "Adresse de l'expéditeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Adresse de la société expéditrice des marchandises (adresse fournie sans code postal et commune). Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "HE",
+    "nom": "Code postal et commune de l'expéditeur",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Code postal et commune de la société expéditrice des marchandises. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "HF",
+    "nom": "Adresse du destinataire",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Adresse de la société destinatrice des marchandises (adresse fournie sans code postal et commune). Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces. Page 97 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "F0",
+    "nom": "Liste des prénoms",
+    "min": "0",
+    "max": "60",
+    "nature": "Alphanumérique",
+    "description": "Les prénoms composés sont séparés par un espace. Les différents prénoms sont séparés par ‘/’. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et des ‘/’ s’il y a plusieurs prénoms (au maximum 6)."
+  },
+  {
+    "id": "F1",
+    "nom": "Nom patronymique",
+    "min": "0",
+    "max": "38",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace."
+  },
+  {
+    "id": "F2",
+    "nom": "Date de naissance",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Lorsque le jour ou le jour et le mois ne sont pas connus, leurs valeurs sont remplacées par 00."
+  },
+  {
+    "id": "F3",
+    "nom": "Genre",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "M (genre masculin), F (féminin), U (unknown)"
+  },
+  {
+    "id": "F4",
+    "nom": "Code analyse",
+    "min": "3",
+    "max": "7",
+    "nature": "Alphanumérique",
+    "description": "Code analyse défini par LOINC (https://loinc.org/)"
+  },
+  {
+    "id": "F5",
+    "nom": "Résultat de l’analyse",
+    "min": "1",
+    "max": "1",
+    "nature": "Alphanumérique",
+    "description": "P (résultat positif), N (négatif), I (indéterminé), X (prélèvement non conforme) Page 100 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "F6",
+    "nom": "Date et heure du prélèvement",
+    "min": "12",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 12 chiffres au format JJMMAAAAHHmm où JJ représente le jour dans le mois, MM le mois, AAAA l’année, HH l’heure et mm les minutes. Le jour, le numéro du mois, l’heure et les minutes sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 101 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.14. Identifiants de données relatives à une attestation vaccinale"
+  },
+  {
+    "id": "L0",
+    "nom": "Nom Patronymique du patient",
+    "min": "0",
+    "max": "80",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces. Les noms composés sont séparés par un espace. Les caractères spéciaux « - » (ascii 45), « . » (ascii 46), « / » (ascii 47) et ESPACE (ascii 32) sont autorisés."
+  },
+  {
+    "id": "L1",
+    "nom": "Liste des prénoms du patient",
+    "min": "0",
+    "max": "80",
+    "nature": "Alphanumérique",
+    "description": "Les prénoms composés sont séparés par un espace. Les différents prénoms sont séparés par ‘/’. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces et des ‘/’ s’il y a plusieurs prénoms (au maximum 6). Les caractères spéciaux « - » (ascii 45), « . » (ascii 46), « / » (ascii 47) et ESPACE (ascii 32) sont autorisés. Remarque : seulement 1 prénom sur la première version."
+  },
+  {
+    "id": "L2",
+    "nom": "Date de naissance du patient",
+    "min": "8",
+    "max": "8",
+    "nature": "Alphanumérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Certaines valeurs peuvent être des dates lunaires : 1 – 30 pour les jours 1 – 50 pour les mois"
+  },
+  {
+    "id": "L3",
+    "nom": "Nom de la maladie couverte",
+    "min": "0",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] des chiffres [0-9] et les caractères spéciaux « - » (ascii 45), « . » (ascii 46), « / » (ascii 47) et ESPACE (ascii 32). Tout autre caractère spécial à l’origine de la génération du 2D-DOC sera remplacé par un ESPACE. Exemple pour la première version : COVID-19 Page 102 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "L4",
+    "nom": "Agent prophylactique",
+    "min": "5",
+    "max": "15",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] des chiffres [0-9] et les caractères spéciaux « - » (ascii 45), « . » (ascii 46), « / » (ascii 47) et ESPACE (ascii 32). Tout autre caractère spécial à l’origine de la génération du 2D-DOC sera remplacé par un ESPACE. Exemple : J07BX03"
+  },
+  {
+    "id": "L5",
+    "nom": "Nom du vaccin",
+    "min": "5",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] des chiffres [0-9] et les caractères spéciaux « - » (ascii 45), « . » (ascii 46), « / » (ascii 47) et ESPACE (ascii 32). Tout autre caractère spécial à l’origine de la génération du 2D-DOC sera remplacé par un ESPACE. Exemple : COMIRNATY PFIZER/BIONTECH"
+  },
+  {
+    "id": "L6",
+    "nom": "Fabricant du vaccin",
+    "min": "5",
+    "max": "30",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] des chiffres [0-9] et les caractères spéciaux « - » (ascii 45), « . » (ascii 46), « / » (ascii 47) et ESPACE (ascii 32). Tout autre caractère spécial à l’origine de la génération du 2D-DOC sera remplacé par un ESPACE. Exemple : COMIRNATY PFIZER/BIONTECH"
+  },
+  {
+    "id": "L7",
+    "nom": "Rang du dernier état de vaccination effectué",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée de 1 caractère est encodée en utilisant uniquement des chiffres [0-9]"
+  },
+  {
+    "id": "L8",
+    "nom": "Nombre de doses attendues pour un cycle complet",
+    "min": "1",
+    "max": "1",
+    "nature": "Numérique",
+    "description": "Cette donnée de 1 caractère est encodée en utilisant uniquement des chiffres [0-9] Page 103 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "G0",
+    "nom": "Type de procédure",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphabétique",
+    "description": "Cette donnée peut uniquement contenir les éléments suivants : Encodage Valeur PN Procédure Normale PA Procédure Accélérée PD Procédure Dublin"
+  },
+  {
+    "id": "G1",
+    "nom": "Orientation régionale",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphabétique",
+    "description": "Cette donnée peut uniquement contenir les éléments suivants : Encodage Valeur KO Non (ou aucune orientation régionale) AR Auvergne-Rhône-Alpes BF Bourgogne-Franche-Comté BR Bretagne CV Centre-Val de Loire GE Grand Est HF Hauts-de-France IF Île-de-France NO Normandie NA Nouvelle-Aquitaine OC Occitanie PL Pays de la Loire PA Provence-Alpes-Côte d’Azur"
+  },
+  {
+    "id": "G2",
+    "nom": "Numéro d’usager",
+    "min": "0",
+    "max": "20",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]."
+  },
+  {
+    "id": "G3",
+    "nom": "Date de fin des droits",
+    "min": "8",
+    "max": "8",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 8 chiffres au format JJMMAAAA où JJ représente le jour dans le mois, MM le mois et AAAA l’année. Le jour et le numéro du mois sont encodés sur 2 chiffres préfixés par 0 si nécessaire Page 105 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "G4",
+    "nom": "Somme des montants versés au titre de l'ADA",
+    "min": "0",
+    "max": "10",
+    "nature": "Float",
+    "description": "Cette donnée est un nombre positif ou négatif. Elle est encodée en utilisant uniquement des chiffres [0-9], au plus une virgule et au plus un tiret [,-]."
+  },
+  {
+    "id": "G5",
+    "nom": "Information de la Direction Territoriale",
+    "min": "0",
+    "max": "45",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des espaces Page 106 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.16. Identifiants de données relatives au permis de conduire"
+  },
+  {
+    "id": "E0",
+    "nom": "Type d’arrêtés Permis de conduire",
+    "min": "2",
+    "max": "2",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z] et des chiffres [0-9]. Type d’arrêté : 1A = Restriction de conduire aux véhicules équipés d'un EAD 1B = Restriction de conduire aux véhicules équipés d'un EAD 1E = Interdiction temporaire de conduire en France 1F = Suspension provisoire du permis de conduire 2E = Interdiction temporaire d'urgence de conduire en France 2F = Suspension Provisoire d'urgence du permis de conduire 3A = Restriction immédiate de conduire aux véhicules équipés d'un EAD 3B = Restriction immédiate de conduire aux véhicules équipés d'un EAD 3E = Interdiction provisoire immédiate de conduire en France 3F = Suspension provisoire immédiate du permis de conduire 3I = Interdiction temporaire de passer un examen 43 = Récépissé de remise de certificat de conduite 44 = Récépissé de remise du titre 47 = Récupération de points suite à un stage 4E = Arrêté modifiant ou confirmant un précédent arrêté 4F = Arrêté modifiant ou confirmant un précédent arrêté 4X = Courrier de non-attribution de points suite à un stage 50 = Avertissement 56 = Arrêté rapportant un précédent arrêté 57 = Arrêté rapportant un précédent avertissement 58 = Interdiction de délivrance d'un permis de conduire 60 = Retrait d'un permis de conduire obtenu irrégulièrement ou frauduleusement 61 = Mesures administratives consécutives à un contrôle médical de l'aptitude à la conduite 62 = Suspension du permis de conduire à défaut de visite médicale"
+  },
+  {
+    "id": "E1",
+    "nom": "Date édition du document",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Date de l’édition du document (nombre de jours après le 01/01/2000 encodée en hexadécimal)."
+  },
+  {
+    "id": "E2",
+    "nom": "Date de fin de sanction",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Date de fin de sanction (nombre de jours après le 01/01/2000 encodée en hexadécimal). Page 107 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "E3",
+    "nom": "Date de notification",
+    "min": "4",
+    "max": "4",
+    "nature": "Alphanumérique",
+    "description": "Date de notification (nombre de jours après le 01/01/2000 encodée en hexadécimal)."
+  },
+  {
+    "id": "E4",
+    "nom": "Type de relevé de permis de conduire",
+    "min": "3",
+    "max": "3",
+    "nature": "Alphabétique",
+    "description": "Cette donnée peut uniquement contenir les éléments suivants : Encodage Valeur RII RII - Relevé d'Information Intégral RIR RIR - Relevé d'Information Restreint RRP RRP - Relevé de reconstitution du capital APC APC - Attestation de permis de conduire"
+  },
+  {
+    "id": "E5",
+    "nom": "Etat du permis de conduire du conducteur",
+    "min": "2",
+    "max": "2",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]. Pour les détails de l’encodage des différentes valeurs de ce champ et de leur signification, voir l’annexe 13."
+  },
+  {
+    "id": "E6",
+    "nom": "Catégories présentes de permis de conduire",
+    "min": "0",
+    "max": "65",
+    "nature": "Alphanumérique",
+    "description": "Cette donnée contient la liste des catégories de permis de conduire séparées par un espace. Par exemple, « A B A1 D1E ». Cette donnée est encodée en utilisant des lettres majuscules non accentuées [A-Z], des chiffres [0-9] et des espaces."
+  },
+  {
+    "id": "E7",
+    "nom": "SIREN du demandeur du document",
+    "min": "9",
+    "max": "9",
+    "nature": "Numérique",
+    "description": "Cette donnée est encodée en utilisant uniquement des chiffres [0-9]."
+  },
+  {
+    "id": "E8",
+    "nom": "Date des données issues du SNCP",
+    "min": "12",
+    "max": "12",
+    "nature": "Numérique",
+    "description": "Cette date est composée uniquement de 12 chiffres au format JJMMAAAAHHmm où JJ représente le jour dans le mois, MM le mois, AAAA l’année, HH l’heure et mm les minutes. Le jour, le numéro du mois, l’heure et les minutes sont encodés sur 2 chiffres préfixés par 0 si nécessaire. Page 108 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses 7.17. Identifiants de données relatives au caducée infirmier"
+  },
+  {
+    "id": "I0",
+    "nom": "Année du caducée",
+    "min": "4",
+    "max": "4",
+    "nature": "Numérique",
+    "description": "Année de validité du caducée Cette date est composée uniquement de 4 chiffres au format AAAA représentant l’année."
+  },
+  {
+    "id": "I1",
+    "nom": "Numéro ordinal",
+    "min": "7",
+    "max": "7",
+    "nature": "Numérique",
+    "description": "Identifiant de l’infirmier dans le tableau de l’Ordre"
+  },
+  {
+    "id": "I2",
+    "nom": "Mention spécifique",
+    "min": "16",
+    "max": "16",
+    "nature": "Alphanumérique",
+    "description": "Ce champ est présent si le mode d’exercice de l’infirmier sur sa cotisation pour l’année en cours est « Libéral » ou « Mixte » (cf. champ « mode d’exercice ») La seule valeur autorisée pour ce champ : SOINS A DOMICILE"
+  },
+  {
+    "id": "I3",
+    "nom": "Nom d’exercice",
+    "min": "1",
+    "max": "54",
+    "nature": "Alphanumérique",
+    "description": "Nom de l’infirmier dans le cadre de son exercice professionnel Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces, le séparateur ‘-‘ et l’apostrophe (‘)"
+  },
+  {
+    "id": "I4",
+    "nom": "Prénom d’exercice",
+    "min": "1",
+    "max": "37",
+    "nature": "Alphanumérique",
+    "description": "Prénom de l’infirmier dans le cadre de son exercice professionnel. Cette donnée est encodée en utilisant uniquement des lettres majuscules non accentuées [A-Z], des espaces, le séparateur ‘-‘ et l’apostrophe (‘). Page 109 sur 243 Spécifications techniques Version : 3.3.0 des codes à barres 2D-Doc Date : 12/12/2023 Pôle Data et Applications Transverses"
+  },
+  {
+    "id": "I5",
+    "nom": "Mode d’exercice",
+    "min": "5",
+    "max": "13",
+    "nature": "Alphanumérique",
+    "description": "Donnée encodé en utilisant uniquement des lettres majuscules non accentués [A-Z] et le séparateur ‘-‘ Identifiant du mode d’exercice d’un infirmier selon les correspondances suivantes : Code Libellé LIBERAL Libéral MIXTE Mixte SAL-PRIVE Salarié – Privé SAL-PUBLIC Salarié – Public BENEVOLE Bénévole SANS-EXERCICE Sans activité RETRAITE Retraité RESERVE Réserve sanitaire"
+  },
+  {
+    "id": "I6",
+    "nom": "Numéro RPPS",
+    "min": "11",
+    "max": "11",
+    "nature": "Numérique",
+    "description": "Identifiant de l’infirmier dans le Répertoire Partagé des Professionnels de Santé (RPPS). Donnée encodé en utilisant uniquement des chiffres [0-9]. Page 110 sur 243"
+  }
+]
