@@ -19,5 +19,6 @@ log = "*"
 env_logger = "*"
 serde = { version = "*", features = ["derive"] }
 serde-xml-rs = "*"
+serde_json = "*"
 ureq = "*"
 url = "*"
