@@ -43,6 +43,12 @@ pub fn date_option(input: &str) -> IResult<&str, Option<NaiveDate>> {
 
 pub type BoxedParser<'a> = Box<dyn Parser<&'a str, &'a str, Error<&'a str>> + 'a>;
 
+pub fn union_of_legit_symbol<'a>(min: usize, max: usize) -> BoxedParser<'a> {
+    Box::new(take_while_m_n(min, max, |c: char| {
+        c.is_ascii_alphanumeric() || c == '/' || c == ' ' || c == ','
+    }))
+}
+
 pub fn alphanumeric<'a>(min: usize, max: usize) -> BoxedParser<'a> {
     Box::new(take_while_m_n(min, max, |c: char| {
         c.is_ascii_alphanumeric()

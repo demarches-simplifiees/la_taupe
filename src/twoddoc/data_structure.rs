@@ -1,4 +1,4 @@
-use super::utils::{alphanumeric, alphanumeric_space_slash, digit, digit_and_comma, BoxedParser};
+use super::utils::{union_of_legit_symbol, BoxedParser};
 use serde::{Deserialize, Deserializer};
 
 static STRUCTURE_JSON: &str = include_str!("structure.json");
@@ -34,32 +34,12 @@ pub fn data_structure_from_json() -> Vec<DataStructure> {
 }
 
 pub fn data_structure<'a>(id: &str) -> BoxedParser<'a> {
-
     let binding = data_structure_from_json();
-    let data = binding.iter().find(|x| x.id == id).unwrap();
+    let data = binding.iter().find(|x| x.id == id);
 
-    match id {
-        "01" => alphanumeric(data.min, data.max),
-        "02" => alphanumeric(data.min, data.max),
-        "10" => alphanumeric_space_slash(data.min, data.max),
-        "18" => alphanumeric(data.min, data.max),
-        "20" => alphanumeric_space_slash(data.min, data.max),
-        "21" => alphanumeric_space_slash(data.min, data.max),
-        "22" => alphanumeric_space_slash(data.min, data.max),
-        "23" => alphanumeric_space_slash(data.min, data.max),
-        "25" => alphanumeric_space_slash(data.min, data.max),
-        "24" => alphanumeric(data.min, data.max),
-        "26" => alphanumeric(data.min, data.max),
-        "41" => digit_and_comma(data.min, data.max),
-        "43" => digit_and_comma(data.min, data.max),
-        "44" => alphanumeric(data.min, data.max),
-        "45" => digit(data.min, data.max),
-        "46" => alphanumeric_space_slash(data.min, data.max),
-        "47" => digit(data.min, data.max),
-        "48" => alphanumeric_space_slash(data.min, data.max),
-        "49" => digit(data.min, data.max),
-        "4A" => digit(data.min, data.max),
-        _ => panic!("Unknwonw data id {}", id),
+    match data {
+        Some(d) => union_of_legit_symbol(d.min, d.max),
+        None => panic!("Unknown data id {}", id),
     }
 }
 
