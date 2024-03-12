@@ -871,6 +871,7 @@ dependencies = [
  "rxing",
  "serde",
  "serde-xml-rs",
+ "serde_json",
  "tempfile",
  "ureq",
  "url",
