@@ -16,7 +16,7 @@ pub fn check(
 }
 
 fn base32_str_to_bytes(base32_str: &str) -> Vec<u8> {
-    base32::decode(base32::Alphabet::RFC4648 { padding: true }, base32_str).unwrap()
+    base32::decode(base32::Alphabet::Rfc4648 { padding: true }, base32_str).unwrap()
 }
 
 fn to_signature(signature: &str) -> Signature {
