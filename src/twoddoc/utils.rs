@@ -1,18 +1,21 @@
-use chrono::{Duration, NaiveDate};
+use chrono::{Duration, NaiveDate, NaiveDateTime};
 use nom::{bytes::complete::take_while_m_n, combinator::map, error::Error, IResult, Parser};
 
 fn to_u32(s: &str) -> u32 {
     s.parse::<u32>().unwrap()
 }
 
-pub fn to_date(s: &str) -> Option<NaiveDate> {
+pub fn to_date(s: &str) -> Option<NaiveDateTime> {
     if s == "FFFF" {
         return None;
     }
 
     let days_to_add = i64::from_str_radix(s, 16).unwrap();
 
-    let start_date = NaiveDate::from_ymd_opt(2000, 1, 1).unwrap();
+    let start_date = NaiveDate::from_ymd_opt(2000, 1, 1)
+        .unwrap()
+        .and_hms_opt(0, 0, 0)
+        .unwrap();
 
     Some(start_date + Duration::days(days_to_add))
 }
@@ -33,11 +36,11 @@ pub fn two_alphanum(input: &str) -> IResult<&str, &str> {
     take_while_m_n(2, 2, |c: char| c.is_ascii_alphanumeric())(input)
 }
 
-pub fn date(input: &str) -> IResult<&str, NaiveDate> {
+pub fn date(input: &str) -> IResult<&str, NaiveDateTime> {
     map(four_alphanum, to_date)(input).map(|(i, d)| (i, d.unwrap()))
 }
 
-pub fn date_option(input: &str) -> IResult<&str, Option<NaiveDate>> {
+pub fn date_option(input: &str) -> IResult<&str, Option<NaiveDateTime>> {
     map(four_alphanum, to_date)(input)
 }
 
