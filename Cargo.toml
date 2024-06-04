@@ -13,7 +13,7 @@ authors = ["See git log"]
 actix-web = "*"
 rxing = "*"
 nom = "*"
-chrono = "*"
+chrono = { version = "*", features = ["serde"] }
 p256 = "*"
 x509-cert = "*"
 base32 = "*"
