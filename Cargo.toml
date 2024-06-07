@@ -24,5 +24,9 @@ env_logger = "*"
 serde = { version = "*", features = ["derive"] }
 serde-xml-rs = "*"
 serde_json = "*"
-ureq = "*"
+ureq = { version = "*", features = ["json"] }
 url = "*"
+
+[dev-dependencies]
+assert_cmd = "*"
+static_init = "*"
