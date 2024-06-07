@@ -24,6 +24,7 @@ env_logger = "*"
 serde = { version = "*", features = ["derive"] }
 serde-xml-rs = "*"
 serde_json = "*"
+tree_magic_mini = "*"
 ureq = { version = "*", features = ["json"] }
 url = "*"
 

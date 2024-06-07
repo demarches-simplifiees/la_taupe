@@ -1,8 +1,8 @@
 use super::entete::Entete;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Ddoc {
     pub entete: Entete,
     pub data: HashMap<String, String>,

@@ -1,7 +1,7 @@
 use chrono::NaiveDateTime;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, Deserialize, PartialEq, Serialize)]
 pub struct Entete {
     pub autorite_certification: String,
     pub identifiant_du_certificat: String,
