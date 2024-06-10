@@ -21,7 +21,12 @@ pub struct AnalysisError {
 
 #[post("/analyze")]
 pub async fn analyze(requested_file: web::Json<RequestedFile>) -> impl Responder {
-    match ureq::get(&requested_file.url).call() {
+    match ureq::AgentBuilder::new()
+        .try_proxy_from_env(true)
+        .build()
+        .get(&requested_file.url)
+        .call()
+    {
         Ok(resp) => handle_response(resp),
         Err(error) => handle_error(error),
     }
