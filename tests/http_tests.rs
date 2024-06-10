@@ -1,6 +1,6 @@
 mod helpers;
 pub use helpers::*;
-use la_taupe::{http::analyze::UpstreamError, twoddoc::ddoc::Ddoc};
+use la_taupe::{analysis::Analysis, http::analyze::UpstreamError};
 use ureq::Error;
 
 use static_init::dynamic;
@@ -16,10 +16,10 @@ fn nominal_case() {
         }))
         .unwrap();
 
-    let ddoc: Ddoc = response.into_json().unwrap();
+    let analysis: Analysis = response.into_json().unwrap();
 
     assert_eq!(
-        ddoc.entete.autorite_certification,
+        analysis.ddoc.unwrap().entete.autorite_certification,
         "FR00".to_string()
     );
 }

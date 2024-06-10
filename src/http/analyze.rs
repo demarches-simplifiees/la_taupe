@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::io::Read;
 use ureq::Error;
 
-use crate::{datamatrix::fetch_datamatrix, file_utils::bytes_to_img, twoddoc::parse};
+use crate::analysis::Analysis;
 
 #[derive(Deserialize)]
 struct RequestedFile {
@@ -52,18 +52,9 @@ fn handle_response(resp: ureq::Response) -> HttpResponse {
         .read_to_end(&mut bytes)
         .unwrap();
 
-    let img = bytes_to_img(bytes);
+    let analysis = Analysis::new(bytes);
 
-    let datamatrix = fetch_datamatrix(img);
-
-    if let Some(datamatrix) = datamatrix {
-        let ddoc = parse(&datamatrix).unwrap();
-
-        HttpResponse::Ok()
-            .content_type(ContentType::json())
-            .json(ddoc)
-    } else {
-        println!("No datamatrix found");
-        HttpResponse::UnprocessableEntity().body("No datamatrix found")
-    }
+    HttpResponse::Ok()
+        .content_type(ContentType::json())
+        .json(analysis)
 }
