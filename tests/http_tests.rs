@@ -45,4 +45,13 @@ fn upstream_error() {
 
 #[test]
 fn missing_datamatrix() {
+    let response = ureq::post("http://localhost:8080/analyze")
+        .send_json(ureq::json!({
+            "url": "http://localhost:3333/la_taupe.png"
+        }))
+        .unwrap();
+
+    let analysis: Analysis = response.into_json().unwrap();
+
+    assert!(analysis.ddoc.is_none());
 }
