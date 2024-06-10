@@ -5,15 +5,18 @@ use ureq::Error;
 
 use crate::analysis::Analysis;
 
+const MAX_FILE_SIZE: usize = 10 * 1024 * 1024;
+
 #[derive(Deserialize)]
 struct RequestedFile {
     url: String,
 }
 
 #[derive(Deserialize, Serialize)]
-pub struct UpstreamError {
-    pub upstream_body: String,
-    pub upstream_status_code: u16,
+pub struct AnalysisError {
+    pub upstream_body: Option<String>,
+    pub upstream_status_code: Option<u16>,
+    pub body: Option<String>,
 }
 
 #[post("/analyze")]
@@ -28,29 +31,45 @@ fn handle_error(error: Error) -> HttpResponse {
     match error {
         Error::Status(code, response) => {
             let upstream_body = match response.into_string() {
-                Ok(body) => body,
-                Err(_) => { "unreadable upstream error".to_string() }
+                Ok(body) => Some(body),
+                Err(_) => Some("unreadable upstream error".to_string()),
             };
 
-            let error = UpstreamError {
+            let error = AnalysisError {
                 upstream_body,
-                upstream_status_code: code,
+                upstream_status_code: Some(code),
+                body: None,
             };
 
             HttpResponse::BadGateway().json(error)
-        },
+        }
         Error::Transport(_) => HttpResponse::InternalServerError().body("Error"),
     }
 }
 
 fn handle_response(resp: ureq::Response) -> HttpResponse {
-    let len: usize = resp.header("Content-Length").unwrap().parse().unwrap();
+    let len: usize = match resp.header("Content-Length") {
+        Some(len) => len.parse().unwrap(),
+        None => MAX_FILE_SIZE,
+    };
 
     let mut bytes: Vec<u8> = Vec::with_capacity(len);
-    resp.into_reader()
-        .take(10_000_000)
+
+    let size = resp
+        .into_reader()
+        .take((MAX_FILE_SIZE + 1).try_into().unwrap())
         .read_to_end(&mut bytes)
         .unwrap();
+
+    if size > MAX_FILE_SIZE {
+        return HttpResponse::UnprocessableEntity()
+            .content_type(ContentType::json())
+            .json(AnalysisError {
+                upstream_status_code: None,
+                upstream_body: None,
+                body: Some("File too big".to_string()),
+            });
+    }
 
     let analysis = Analysis::new(bytes);
 
