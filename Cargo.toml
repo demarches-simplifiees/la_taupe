@@ -6,6 +6,7 @@ rust-version = "1.78.0"
 license-file = "LICENSE.txt"
 description = "La Taupe is a tool to extract administrative data from documents."
 authors = ["See git log"]
+build = "build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
