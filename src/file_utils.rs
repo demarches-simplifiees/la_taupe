@@ -4,17 +4,20 @@ use std::{
     process::{Command, Stdio},
 };
 
-pub fn file_to_img(file_name: &str) -> DynamicImage {
-    let content = std::fs::read(file_name).expect("Failed to read file");
+pub fn file_to_img(file_name: &str) -> Result<DynamicImage, String> {
+    let content = std::fs::read(file_name).map_err(|e| format!("Failed to read file: {}", e))?;
     bytes_to_img(content)
 }
 
-pub fn bytes_to_img(bytes: Vec<u8>) -> DynamicImage {
+pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
     let filetype = tree_magic_mini::from_u8(&bytes);
 
     match filetype {
-        "application/pdf" => pdf_to_img(bytes),
-        _ => image::load_from_memory(&bytes).expect("Failed to load image from bytes")
+        "application/pdf" => Ok(pdf_to_img(bytes)),
+        "image/png" | "image/jpeg" => {
+            Ok(image::load_from_memory(&bytes).expect("Failed to load image from bytes"))
+        }
+        _ => Err(format!("Unsupported file type: {}", filetype)),
     }
 }
 
@@ -42,11 +45,13 @@ mod tests {
 
     #[test]
     fn test_file_to_img() {
-        let img_from_pdf = file_to_img("tests/fixtures/2ddoc/justificatif_de_domicile.pdf");
+        let img_from_pdf =
+            file_to_img("tests/fixtures/2ddoc/justificatif_de_domicile.pdf").unwrap();
         assert_eq!(img_from_pdf.width(), 1241);
         assert_eq!(img_from_pdf.height(), 1754);
 
-        let img_from_png = file_to_img("tests/fixtures/2ddoc/justificatif_de_domicile.png");
+        let img_from_png =
+            file_to_img("tests/fixtures/2ddoc/justificatif_de_domicile.png").unwrap();
         assert_eq!(img_from_png.width(), 119);
         assert_eq!(img_from_png.height(), 122);
     }

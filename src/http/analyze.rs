@@ -76,9 +76,16 @@ fn handle_response(resp: ureq::Response) -> HttpResponse {
             });
     }
 
-    let analysis = Analysis::new(bytes);
-
-    HttpResponse::Ok()
-        .content_type(ContentType::json())
-        .json(analysis)
+    match Analysis::try_into(bytes) {
+        Ok(analysis) => HttpResponse::Ok()
+            .content_type(ContentType::json())
+            .json(analysis),
+        Err(error_msg) => HttpResponse::UnprocessableEntity()
+            .content_type(ContentType::json())
+            .json(AnalysisError {
+                upstream_status_code: None,
+                upstream_body: None,
+                body: Some(error_msg),
+            }),
+    }
 }

@@ -73,3 +73,24 @@ fn file_too_big() {
         _ => panic!("Expected a 422 error"),
     }
 }
+
+#[test]
+fn unhandled_format() {
+    let error = ureq::post("http://localhost:8080/analyze")
+        .send_json(ureq::json!({
+            "url": "http://localhost:3333/text.txt"
+        }))
+        .err()
+        .unwrap();
+
+    match error {
+        Error::Status(422, response) => {
+            let error: AnalysisError = response.into_json().unwrap();
+            assert_eq!(
+                error.body.unwrap(),
+                "Unsupported file type: text/plain".to_string()
+            );
+        }
+        _ => panic!("Expected a 422 error"),
+    }
+}

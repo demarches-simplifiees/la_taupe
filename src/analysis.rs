@@ -12,12 +12,12 @@ pub struct Analysis {
 }
 
 impl Analysis {
-    pub fn new(content: Vec<u8>) -> Self {
-        let img = bytes_to_img(content);
+    pub fn try_into(content: Vec<u8>) -> Result<Self, String> {
+        let img = bytes_to_img(content)?;
         let datamatrix = fetch_datamatrix(img);
 
-        Analysis {
+        Ok(Analysis {
             ddoc: datamatrix.map(|datamatrix| parse(&datamatrix).unwrap()),
-        }
+        })
     }
 }

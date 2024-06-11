@@ -14,7 +14,7 @@ fn main() {
     } else {
         let file_path = &args[1];
 
-        let img = file_to_img(file_path);
+        let img = file_to_img(file_path).unwrap();
 
         let datamatrix = fetch_datamatrix(img);
 
