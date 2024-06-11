@@ -1,8 +1,6 @@
-use std::env::args;
-
-use la_taupe::{
-    datamatrix::fetch_datamatrix, file_utils::file_to_img, http::server, twoddoc::parse,
-};
+use la_taupe::{analysis::Analysis, http::server};
+use serde_json::json;
+use std::{env::args, path::Path};
 
 fn main() {
     env_logger::init();
@@ -12,15 +10,14 @@ fn main() {
     if args.len() == 1 {
         let _ = server::main();
     } else {
-        let file_path = &args[1];
+        let path = Path::new(&args[1]);
 
-        let img = file_to_img(file_path).unwrap();
-
-        let datamatrix = fetch_datamatrix(img);
-
-        if let Some(datamatrix) = datamatrix {
-            let ddoc = parse(&datamatrix);
-            println!("{:#?}", ddoc);
+        match Analysis::try_from(path) {
+            Ok(analysis) => println!("{}", serde_json::to_string(&analysis).unwrap()),
+            Err(msg) => {
+                eprintln!("{}", json!({ "error": msg }));
+                std::process::exit(1);
+            }
         }
     }
 }

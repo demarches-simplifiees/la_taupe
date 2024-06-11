@@ -76,7 +76,7 @@ fn handle_response(resp: ureq::Response) -> HttpResponse {
             });
     }
 
-    match Analysis::try_into(bytes) {
+    match Analysis::try_from(bytes) {
         Ok(analysis) => HttpResponse::Ok()
             .content_type(ContentType::json())
             .json(analysis),
