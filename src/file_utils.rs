@@ -1,10 +1,11 @@
 use image::DynamicImage;
 use std::{
     io::Write,
+    path::Path,
     process::{Command, Stdio},
 };
 
-pub fn file_to_img(file_name: &str) -> Result<DynamicImage, String> {
+pub fn file_to_img(file_name: &Path) -> Result<DynamicImage, String> {
     let content = std::fs::read(file_name).map_err(|e| format!("Failed to read file: {}", e))?;
     bytes_to_img(content)
 }
@@ -45,13 +46,17 @@ mod tests {
 
     #[test]
     fn test_file_to_img() {
-        let img_from_pdf =
-            file_to_img("tests/fixtures/2ddoc/justificatif_de_domicile.pdf").unwrap();
+        let img_from_pdf = file_to_img(Path::new(
+            "tests/fixtures/2ddoc/justificatif_de_domicile.pdf",
+        ))
+        .unwrap();
         assert_eq!(img_from_pdf.width(), 1241);
         assert_eq!(img_from_pdf.height(), 1754);
 
-        let img_from_png =
-            file_to_img("tests/fixtures/2ddoc/justificatif_de_domicile.png").unwrap();
+        let img_from_png = file_to_img(Path::new(
+            "tests/fixtures/2ddoc/justificatif_de_domicile.png",
+        ))
+        .unwrap();
         assert_eq!(img_from_png.width(), 119);
         assert_eq!(img_from_png.height(), 122);
     }
