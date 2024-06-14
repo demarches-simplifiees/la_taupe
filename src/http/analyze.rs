@@ -48,7 +48,15 @@ fn handle_error(error: Error) -> HttpResponse {
 
             HttpResponse::BadGateway().json(error)
         }
-        Error::Transport(_) => HttpResponse::InternalServerError().body("Error"),
+        Error::Transport(body) => {
+            let error = AnalysisError {
+                upstream_body: None,
+                upstream_status_code: None,
+                body: Some(body.to_string()),
+            };
+
+            HttpResponse::InternalServerError().json(error)
+        }
     }
 }
 
