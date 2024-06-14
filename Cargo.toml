@@ -32,3 +32,6 @@ url = "*"
 [dev-dependencies]
 assert_cmd = "*"
 static_init = "*"
+
+[package.metadata.deb]
+depends = "poppler-utils"
