@@ -113,6 +113,25 @@ pub fn trust_service(autorite_du_certificat: &str) -> TrustService {
         .clone()
 }
 
+pub fn trusted_repositories_urls() -> Vec<Url> {
+    let parsed = serde_xml_rs::from_str::<TrustServiceStatusList>(TSL_SIGNED_XML).unwrap();
+
+    parsed
+        .list
+        .list
+        .iter()
+        .map(|tsp| {
+            tsp.info
+                .information_uri
+                .uri
+                .first()
+                .unwrap()
+                .parse()
+                .unwrap()
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

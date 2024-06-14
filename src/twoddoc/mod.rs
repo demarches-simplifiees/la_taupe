@@ -22,7 +22,7 @@ pub mod data_structure;
 pub mod ddoc;
 pub mod entete;
 mod signature;
-mod trust_service;
+pub mod trust_service;
 pub mod utils;
 
 pub fn parse(doc: &str) -> Option<Ddoc> {
