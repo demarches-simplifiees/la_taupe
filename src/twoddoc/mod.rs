@@ -160,6 +160,7 @@ mod tests {
                 date_emission: Some(date_time_from(2012, 11, 15)),
                 date_creation_signature: date_time_from(2012, 11, 13),
                 type_document_id: "00".to_string(),
+                type_document: "Justificatif de domicile".to_string(),
                 perimetre: None,
                 emetteur: None,
             }
@@ -194,6 +195,7 @@ mod tests {
                 date_emission: Some(date_time_from(2012, 10, 15)),
                 date_creation_signature: date_time_from(2015, 7, 27),
                 type_document_id: "01".to_string(),
+                type_document: "Justificatif de domicile".to_string(),
                 perimetre: Some("01".to_string()),
                 emetteur: None,
             }
@@ -224,6 +226,7 @@ mod tests {
                 date_emission: None,
                 date_creation_signature: date_time_from(2022, 3, 24),
                 type_document_id: "04".to_string(),
+                type_document: "Justificatif de ressources".to_string(),
                 perimetre: Some("01".to_string()),
                 emetteur: Some("FR".to_string()),
             }
