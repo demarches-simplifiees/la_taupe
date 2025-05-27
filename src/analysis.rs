@@ -10,6 +10,8 @@ use crate::{
 
 #[derive(Deserialize, Serialize)]
 pub struct Analysis {
+    // serialize as "2ddoc" instead of "ddoc
+    #[serde(rename = "2ddoc")]
     pub ddoc: Option<Ddoc>,
 }
 
