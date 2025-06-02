@@ -1,27 +1,26 @@
 use std::collections::HashSet;
 
 use image::DynamicImage;
+use rxing::DecodeHintValue::PossibleFormats;
+use rxing::DecodeHintValue::TryHarder;
 use rxing::{
     common::HybridBinarizer, BarcodeFormat, BinaryBitmap, BufferedImageLuminanceSource,
-    DecodeHintType, DecodeHintValue, DecodingHintDictionary, MultiFormatReader, Reader,
+    DecodeHints, MultiFormatReader,
 };
 
 pub fn fetch_datamatrix(img: DynamicImage) -> Option<String> {
     let mut multi_format_reader = MultiFormatReader::default();
 
-    let hints = DecodingHintDictionary::from([
-        (DecodeHintType::TRY_HARDER, DecodeHintValue::TryHarder(true)),
-        (
-            DecodeHintType::POSSIBLE_FORMATS,
-            DecodeHintValue::PossibleFormats(HashSet::from([BarcodeFormat::DATA_MATRIX])),
-        ),
-    ]);
+    let hints = DecodeHints::default()
+        .with(PossibleFormats(HashSet::from([BarcodeFormat::DATA_MATRIX])))
+        .with(TryHarder(true));
+
+    multi_format_reader.set_hints(&hints);
 
     let result = multi_format_reader
-        .decode_with_hints(
-            &mut BinaryBitmap::new(HybridBinarizer::new(BufferedImageLuminanceSource::new(img))),
-            &hints,
-        )
+        .decode_with_state(&mut BinaryBitmap::new(HybridBinarizer::new(
+            BufferedImageLuminanceSource::new(img),
+        )))
         .ok()?;
 
     Some(result.getText().to_string())
