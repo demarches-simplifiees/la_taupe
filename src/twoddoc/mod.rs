@@ -13,8 +13,8 @@ use nom::{
     character::complete::alphanumeric1,
     error::Error,
     multi::many1,
-    sequence::{preceded, separated_pair, terminated, Tuple},
-    IResult,
+    sequence::{preceded, separated_pair, terminated},
+    IResult, Parser,
 };
 
 mod certificate_store;
@@ -77,7 +77,7 @@ pub fn parse(doc: &str) -> Option<Ddoc> {
         }
     };
 
-    let (_, data) = many1(datum)(message).ok()?;
+    let (_, data) = many1(datum).parse(message).ok()?;
     let bag: HashMap<String, String> = data
         .iter()
         .cloned()
@@ -94,7 +94,7 @@ pub fn parse(doc: &str) -> Option<Ddoc> {
 }
 
 pub fn version(i: &str) -> Option<(&str, u32)> {
-    preceded(tag("DC"), two_digit)(i).ok()
+    preceded(tag("DC"), two_digit).parse(i).ok()
 }
 
 fn datum(i: &str) -> IResult<&str, (&str, &str)> {
@@ -103,7 +103,8 @@ fn datum(i: &str) -> IResult<&str, (&str, &str)> {
         terminated(data_structure(data_id), tag("")),
         data_structure(data_id),
         terminated(data_structure(data_id), tag("")), // tronqué
-    ))(i)
+    ))
+    .parse(i)
     .map(|(i, data)| (i, (data_id, data)))
 }
 
@@ -112,7 +113,8 @@ fn check_signature(i: &str, autorite_certification: &str, identifiant_du_certifi
         is_not::<&str, &str, Error<&str>>(""),
         tag(""),
         alphanumeric1,
-    )(i)
+    )
+    .parse(i)
     .unwrap();
 
     signature::check(

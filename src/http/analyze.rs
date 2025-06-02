@@ -1,7 +1,7 @@
 use actix_web::{http::header::ContentType, post, web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use std::io::Read;
-use ureq::Error;
+use ureq::{http::Response, Agent, Body};
 
 use crate::analysis::Analysis;
 
@@ -21,55 +21,65 @@ pub struct AnalysisError {
 
 #[post("/analyze")]
 pub async fn analyze(requested_file: web::Json<RequestedFile>) -> impl Responder {
-    match ureq::AgentBuilder::new()
-        .try_proxy_from_env(true)
+    let proxy = ureq::Proxy::try_from_env();
+
+    let agent: Agent = Agent::config_builder()
+        .http_status_as_error(false)
+        .proxy(proxy)
         .build()
-        .get(&requested_file.url)
-        .call()
-    {
-        Ok(resp) => handle_response(resp),
-        Err(error) => handle_error(error),
+        .into();
+
+    let response = agent.get(&requested_file.url).call().unwrap();
+
+    if response.status().is_success() {
+        handle_response(response)
+    } else {
+        handle_error(response)
     }
 }
 
-fn handle_error(error: Error) -> HttpResponse {
-    match error {
-        Error::Status(code, response) => {
-            let upstream_body = match response.into_string() {
-                Ok(body) => Some(body),
-                Err(_) => Some("unreadable upstream error".to_string()),
-            };
+fn handle_error(mut resp: Response<Body>) -> HttpResponse {
+    let upstream_body = Some(
+        resp.body_mut()
+            .read_to_string()
+            .unwrap_or_else(|_| "unreadable upstream error".to_string()),
+    );
+    let upstream_status_code = Some(resp.status().into());
 
-            let error = AnalysisError {
-                upstream_body,
-                upstream_status_code: Some(code),
-                body: None,
-            };
+    if resp.status().is_server_error() {
+        let error = AnalysisError {
+            upstream_body,
+            upstream_status_code,
+            body: Some("upstream server error".to_string()),
+        };
 
-            HttpResponse::BadGateway().json(error)
-        }
-        Error::Transport(body) => {
-            let error = AnalysisError {
-                upstream_body: None,
-                upstream_status_code: None,
-                body: Some(body.to_string()),
-            };
+        HttpResponse::BadGateway().json(error)
+    } else {
+        let error = AnalysisError {
+            upstream_body,
+            upstream_status_code,
+            body: Some("upstream client error".to_string()),
+        };
 
-            HttpResponse::InternalServerError().json(error)
-        }
+        HttpResponse::InternalServerError().json(error)
     }
 }
 
-fn handle_response(resp: ureq::Response) -> HttpResponse {
-    let len: usize = match resp.header("Content-Length") {
-        Some(len) => len.parse().unwrap(),
-        None => MAX_FILE_SIZE,
+fn handle_response(mut resp: Response<Body>) -> HttpResponse {
+    let len: usize = if let Some(len) = resp.headers().get("Content-Length") {
+        len.to_str()
+            .unwrap_or("")
+            .parse::<usize>()
+            .unwrap_or(MAX_FILE_SIZE)
+    } else {
+        MAX_FILE_SIZE
     };
 
     let mut bytes: Vec<u8> = Vec::with_capacity(len);
 
     let size = resp
-        .into_reader()
+        .body_mut()
+        .as_reader()
         .take((MAX_FILE_SIZE + 1).try_into().unwrap())
         .read_to_end(&mut bytes)
         .unwrap();

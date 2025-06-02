@@ -5,71 +5,71 @@ static TSL_SIGNED_XML: &str = include_str!("tsl_signed.xml");
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TrustServiceStatusList {
-    #[serde(rename = "TrustServiceProviderList")]
+    #[serde(rename = "tsl:TrustServiceProviderList")]
     list: TrustServiceProviderList,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TrustServiceProviderList {
-    #[serde(rename = "TrustServiceProvider", default)]
+    #[serde(rename = "tsl:TrustServiceProvider", default)]
     list: Vec<TrustServiceProvider>,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TrustServiceProvider {
-    #[serde(rename = "TSPInformation")]
+    #[serde(rename = "tsl:TSPInformation")]
     info: TSPInformation,
-    #[serde(rename = "TSPServices")]
+    #[serde(rename = "tsl:TSPServices")]
     services: TSPServices,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TSPInformation {
-    #[serde(rename = "TSPTradeName")]
+    #[serde(rename = "tsl:TSPTradeName")]
     trade_name: TSPTradeName,
-    #[serde(rename = "TSPInformationURI")]
+    #[serde(rename = "tsl:TSPInformationURI")]
     information_uri: TSPInformationURI,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TSPTradeName {
-    #[serde(rename = "Name", default)]
+    #[serde(rename = "tsl:Name", default)]
     name: Vec<String>,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TSPInformationURI {
-    #[serde(rename = "URI", default)]
+    #[serde(rename = "tsl:URI", default)]
     uri: Vec<String>,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TSPServices {
-    #[serde(rename = "TSPService", default)]
+    #[serde(rename = "tsl:TSPService", default)]
     services: Vec<TSPService>,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct TSPService {
-    #[serde(rename = "ServiceInformation")]
+    #[serde(rename = "tsl:ServiceInformation")]
     info: ServiceInformation,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct ServiceInformation {
-    #[serde(rename = "ServiceDigitalIdentity")]
+    #[serde(rename = "tsl:ServiceDigitalIdentity")]
     digital_identities: ServiceDigitalIdentity,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct ServiceDigitalIdentity {
-    #[serde(rename = "DigitalId")]
+    #[serde(rename = "tsl:DigitalId")]
     digital_ids: DigitalId,
 }
 
 #[derive(Debug, Deserialize, PartialEq, Eq)]
 struct DigitalId {
-    #[serde(rename = "X509Certificate")]
+    #[serde(rename = "tsl:X509Certificate")]
     certificates: String,
 }
 

@@ -27,15 +27,20 @@ fn fetch_certificate(autorite_certification: &str, identifiant_du_certificat: &s
 
     log::info!("Fetching certificate from {}", url);
 
-    let resp = ureq::get(url.as_str()).call().unwrap();
+    let mut resp = ureq::get(url.as_str()).call().unwrap();
 
-    let len: usize = resp.header("Content-Length").unwrap().parse().unwrap();
+    let len: usize = resp
+        .headers()
+        .get("Content-Length")
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .parse()
+        .unwrap();
 
     let mut bytes: Vec<u8> = Vec::with_capacity(len);
-    resp.into_reader()
-        .take(10_000_000)
-        .read_to_end(&mut bytes)
-        .unwrap();
+
+    resp.body_mut().as_reader().read_to_end(&mut bytes).unwrap();
 
     Certificate::from_der(&bytes[..]).unwrap()
 }
