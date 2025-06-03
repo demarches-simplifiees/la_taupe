@@ -23,6 +23,8 @@ pub struct AnalysisError {
 pub async fn analyze(requested_file: web::Json<RequestedFile>) -> impl Responder {
     let proxy = ureq::Proxy::try_from_env();
 
+    log::info!("Proxy detected: {:?}", proxy);
+
     let agent: Agent = Agent::config_builder()
         .http_status_as_error(false)
         .proxy(proxy)
