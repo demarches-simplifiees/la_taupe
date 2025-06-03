@@ -1,7 +1,6 @@
 use actix_web::{http::header::ContentType, post, web, HttpResponse, Responder};
+use reqwest::Response;
 use serde::{Deserialize, Serialize};
-use std::io::Read;
-use ureq::{http::Response, Agent, Body};
 
 use crate::analysis::Analysis;
 
@@ -21,34 +20,37 @@ pub struct AnalysisError {
 
 #[post("/analyze")]
 pub async fn analyze(requested_file: web::Json<RequestedFile>) -> impl Responder {
-    let proxy = ureq::Proxy::try_from_env();
-
-    log::info!("Proxy detected: {:?}", proxy);
-
-    let agent: Agent = Agent::config_builder()
-        .http_status_as_error(false)
-        .proxy(proxy)
-        .build()
-        .into();
-
-    let response = agent.get(&requested_file.url).call().unwrap();
+    let response = match reqwest::get(&requested_file.url).await {
+        Ok(response) => response,
+        Err(e) => {
+            log::error!("Request failed: {}", e);
+            return HttpResponse::InternalServerError().json(AnalysisError {
+                upstream_body: None,
+                upstream_status_code: None,
+                body: Some(format!("Request failed: {}", e)),
+            });
+        }
+    };
 
     if response.status().is_success() {
-        handle_response(response)
+        handle_response(response).await
     } else {
-        handle_error(response)
+        handle_error(response).await
     }
 }
 
-fn handle_error(mut resp: Response<Body>) -> HttpResponse {
+async fn handle_error(resp: Response) -> HttpResponse {
+    let status = resp.status();
+    let upstream_status_code = Some(status.as_u16());
+    let is_server_error = status.is_server_error();
+
     let upstream_body = Some(
-        resp.body_mut()
-            .read_to_string()
+        resp.text()
+            .await
             .unwrap_or_else(|_| "unreadable upstream error".to_string()),
     );
-    let upstream_status_code = Some(resp.status().into());
 
-    if resp.status().is_server_error() {
+    if is_server_error {
         let error = AnalysisError {
             upstream_body,
             upstream_status_code,
@@ -67,24 +69,38 @@ fn handle_error(mut resp: Response<Body>) -> HttpResponse {
     }
 }
 
-fn handle_response(mut resp: Response<Body>) -> HttpResponse {
-    let len: usize = if let Some(len) = resp.headers().get("Content-Length") {
-        len.to_str()
-            .unwrap_or("")
-            .parse::<usize>()
-            .unwrap_or(MAX_FILE_SIZE)
-    } else {
-        MAX_FILE_SIZE
-    };
+async fn handle_response(mut resp: Response) -> HttpResponse {
+    let len = resp
+        .headers()
+        .get("content-length")
+        .and_then(|h| h.to_str().ok())
+        .and_then(|s| s.parse::<usize>().ok())
+        .unwrap_or(MAX_FILE_SIZE);
+
+    if len > MAX_FILE_SIZE {
+        return HttpResponse::UnprocessableEntity()
+            .content_type(ContentType::json())
+            .json(AnalysisError {
+                upstream_status_code: None,
+                upstream_body: None,
+                body: Some("File too big".to_string()),
+            });
+    }
 
     let mut bytes: Vec<u8> = Vec::with_capacity(len);
 
-    let size = resp
-        .body_mut()
-        .as_reader()
-        .take((MAX_FILE_SIZE + 1).try_into().unwrap())
-        .read_to_end(&mut bytes)
-        .unwrap();
+    while let Ok(chunk) = resp.chunk().await {
+        match chunk {
+            Some(data) => bytes.extend_from_slice(&data),
+            None => break,
+        }
+
+        if bytes.len() > MAX_FILE_SIZE {
+            break;
+        }
+    }
+
+    let size = bytes.len();
 
     if size > MAX_FILE_SIZE {
         return HttpResponse::UnprocessableEntity()
