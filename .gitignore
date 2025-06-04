@@ -1,2 +1,3 @@
 /target
 tests/fixtures/static_server/node_modules
+.aider*

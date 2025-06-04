@@ -1,4 +1,4 @@
-use std::io::Read;
+use reqwest::blocking::Client;
 use url::Url;
 use x509_cert::{
     der::{Decode, DecodePem},
@@ -27,20 +27,13 @@ fn fetch_certificate(autorite_certification: &str, identifiant_du_certificat: &s
 
     log::info!("Fetching certificate from {}", url);
 
-    let mut resp = ureq::get(url.as_str()).call().unwrap();
+    let client = Client::new();
+    let resp = client.get(url.as_str()).send().unwrap();
 
-    let len: usize = resp
-        .headers()
-        .get("Content-Length")
-        .unwrap()
-        .to_str()
-        .unwrap()
-        .parse()
-        .unwrap();
+    if !resp.status().is_success() {
+        panic!("Failed to fetch certificate: HTTP {}", resp.status());
+    }
 
-    let mut bytes: Vec<u8> = Vec::with_capacity(len);
-
-    resp.body_mut().as_reader().read_to_end(&mut bytes).unwrap();
-
+    let bytes = resp.bytes().unwrap().to_vec();
     Certificate::from_der(&bytes[..]).unwrap()
 }
