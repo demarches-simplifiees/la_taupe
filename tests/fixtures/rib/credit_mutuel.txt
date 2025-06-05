@@ -1,0 +1,19 @@
+                                                RELEVE D’IDENTITE BANCAIRE
+Identifiant national de compte bancaire - RIB
+  Banque        Guichet         N° compte        Clé     Devise                       Domiciliation
+   30001        00064          49190095620       88       EUR                       CCM VAL DU CENS
+Identifiant international de compte bancaire
+            IBAN (International Bank Account Number)                              BIC (Bank Identifier Code)
+   FR76      3000     1000      6449    1900    9562       088                           CMCIFR2A
+
+     Domiciliation                                                         Titulaire du compte (Account Owner)
+     CCM VAL DU CENS                                                       M HENRI MATISSE
+     AGENCE DU PONT DU CENS                                                123 ALLEE DES ROSES
+     87 ROUTE DE RENNES                                                    44640 LE PELLERIN
+     44700 ORVAULT
+     ☎ 02 51 88 67 70
+Remettez ce relevé à tout autre organisme ayant besoin de connaître     PARTIE RESERVEE AU DESTINATAIRE DU RELEVE
+vos références bancaires pour la domiciliation de vos virements ou de
+prélèvements à votre compte. Vous éviterez ainsi des erreurs ou des
+retards d’exécution.
+
