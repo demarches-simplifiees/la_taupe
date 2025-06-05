@@ -22,6 +22,30 @@ pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
     }
 }
 
+pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
+    let filetype = tree_magic_mini::from_u8(&bytes);
+
+    if filetype != "application/pdf" {
+        return Err("Only PDF files are supported for RIB analysis".to_string());
+    };
+
+    let mut child = Command::new("pdftotext")
+        .arg("-layout")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("Failed to start pdftotext");
+
+    let mut stdin = child.stdin.take().expect("Failed to open stdin");
+    std::thread::spawn(move || {
+        stdin.write_all(&bytes).expect("Failed to write to stdin");
+    });
+
+    let output = child.wait_with_output().expect("Failed to wait on child");
+
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
+}
+
 fn pdf_to_img(file: Vec<u8>) -> DynamicImage {
     let mut child = Command::new("pdftoppm")
         .args(["-png", "-singlefile"])
