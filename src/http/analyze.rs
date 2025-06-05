@@ -2,13 +2,14 @@ use actix_web::{http::header::ContentType, post, web, HttpResponse, Responder};
 use reqwest::Response;
 use serde::{Deserialize, Serialize};
 
-use crate::analysis::Analysis;
+use crate::analysis::{Analysis, Hint};
 
 const MAX_FILE_SIZE: usize = 10 * 1024 * 1024;
 
 #[derive(Deserialize)]
 struct RequestedFile {
     url: String,
+    hint: Option<Hint>,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -33,7 +34,7 @@ pub async fn analyze(requested_file: web::Json<RequestedFile>) -> impl Responder
     };
 
     if response.status().is_success() {
-        handle_response(response).await
+        handle_response(response, requested_file.hint).await
     } else {
         handle_error(response).await
     }
@@ -69,7 +70,7 @@ async fn handle_error(resp: Response) -> HttpResponse {
     }
 }
 
-async fn handle_response(mut resp: Response) -> HttpResponse {
+async fn handle_response(mut resp: Response, hint: Option<Hint>) -> HttpResponse {
     let len = resp
         .headers()
         .get("content-length")
@@ -112,7 +113,7 @@ async fn handle_response(mut resp: Response) -> HttpResponse {
             });
     }
 
-    match Analysis::try_from(bytes) {
+    match Analysis::try_from((bytes, hint)) {
         Ok(analysis) => HttpResponse::Ok()
             .content_type(ContentType::json())
             .json(analysis),
