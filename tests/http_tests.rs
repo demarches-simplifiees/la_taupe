@@ -14,7 +14,8 @@ fn nominal_case() {
     let response = Client::new()
         .post("http://localhost:8080/analyze")
         .json(&json!({
-            "url": "http://localhost:3333/justificatif_de_domicile.png"
+            "url": "http://localhost:3333/justificatif_de_domicile.png",
+            "hint": { "type": "2ddoc" },
         }))
         .send()
         .unwrap();
@@ -32,7 +33,8 @@ fn upstream_error() {
     let response = Client::new()
         .post("http://localhost:8080/analyze")
         .json(&json!({
-            "url": "http://localhost:3333/500"
+            "url": "http://localhost:3333/500",
+            "hint": { "type": "2ddoc" },
         }))
         .send()
         .unwrap();
@@ -50,7 +52,8 @@ fn missing_datamatrix() {
     let response = Client::new()
         .post("http://localhost:8080/analyze")
         .json(&json!({
-            "url": "http://localhost:3333/la_taupe.png"
+            "url": "http://localhost:3333/la_taupe.png",
+            "hint": { "type": "2ddoc" },
         }))
         .send()
         .unwrap();
@@ -65,7 +68,8 @@ fn file_too_big() {
     let response = Client::new()
         .post("http://localhost:8080/analyze")
         .json(&json!({
-            "url": "http://localhost:3333/too_big"
+            "url": "http://localhost:3333/too_big",
+            "hint": { "type": "2ddoc" },
         }))
         .send()
         .unwrap();
@@ -82,7 +86,8 @@ fn unhandled_format() {
     let response = Client::new()
         .post("http://localhost:8080/analyze")
         .json(&json!({
-            "url": "http://localhost:3333/text.txt"
+            "url": "http://localhost:3333/text.txt",
+            "hint": { "type": "2ddoc" },
         }))
         .send()
         .unwrap();
