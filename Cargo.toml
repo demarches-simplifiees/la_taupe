@@ -18,10 +18,13 @@ chrono = { version = "*", features = ["serde"] }
 p256 = "*"
 x509-cert = "*"
 base32 = "*"
+iban_validate = "*"
+itertools = "*"
 image = "*"
 tempfile = "*"
 log = "*"
 env_logger = "*"
+regex = "*"
 serde = { version = "*", features = ["derive"] }
 serde-xml-rs = "*"
 serde_json = "*"
