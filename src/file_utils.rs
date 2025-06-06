@@ -30,7 +30,7 @@ pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
     };
 
     let mut child = Command::new("pdftotext")
-        .arg("-layout")
+        .args(["-layout", "-", "-"])
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()
