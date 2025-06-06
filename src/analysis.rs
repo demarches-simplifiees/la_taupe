@@ -8,7 +8,7 @@ use crate::{
     twoddoc::{ddoc::Ddoc, parse},
 };
 
-use crate::iban::Rib;
+use crate::rib::Rib;
 
 #[derive(Deserialize, Serialize)]
 pub struct Analysis {
