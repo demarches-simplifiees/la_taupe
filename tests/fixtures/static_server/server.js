@@ -5,7 +5,8 @@
 const express = require('express');
 const app = express();
 
-app.use(express.static('../2ddoc'));
+app.use(express.static(__dirname + '/../2ddoc'));
+app.use(express.static(__dirname + '/../rib'));
 
 app.get('/500', function(req, res){
   res.writeHead(500, {'Content-Type': 'text/plain'});
