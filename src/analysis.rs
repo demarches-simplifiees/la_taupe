@@ -25,6 +25,7 @@ pub enum Hint {
 
 #[derive(Deserialize, Copy, Clone, Debug)]
 pub enum Type {
+    #[serde(rename = "rib")]
     Rib,
     #[serde(rename = "2ddoc")]
     Twoddoc,
