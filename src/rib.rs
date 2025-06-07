@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 pub struct Rib {
     titulaire: Option<Vec<String>>,
     iban: String,
+    bic: Option<String>,
 }
 
 impl TryFrom<String> for Rib {
@@ -16,9 +17,14 @@ impl TryFrom<String> for Rib {
         let lines = clean(text.clone());
 
         let titulaire = extract_titulaire(lines.clone());
+        let bic = extract_fr_bic(&text);
 
         if let Some(iban) = extract_iban(text) {
-            Ok(Rib { titulaire, iban })
+            Ok(Rib {
+                titulaire,
+                iban,
+                bic,
+            })
         } else {
             Err(format!("No IBAN found in the text. Lines: {:?}", lines))
         }
@@ -212,10 +218,53 @@ fn extract_iban(text: String) -> Option<String> {
     cleaned_iban?.parse::<Iban>().ok().map(|x| x.to_string())
 }
 
+fn extract_fr_bic(content: &str) -> Option<String> {
+    let fr_without_space = Regex::new(r"[A-Z]{4}FR[A-Z0-9]{2}([A-Z0-9]{3})?").unwrap();
+    let fr_with_xxx_with_space = Regex::new(r"[A-Z]{4}\s?FR\s?[A-Z0-9]{2}\s?XXX?").unwrap();
+
+    // Helper to get unique matches
+    fn get_unique_matches(regex: &Regex, text: &str) -> Vec<String> {
+        let matches: Vec<String> = regex
+            .find_iter(text)
+            .map(|m| m.as_str().to_string())
+            .unique()
+            .collect();
+        matches.into_iter().collect()
+    }
+
+    let mut fr_without_space_matches = get_unique_matches(&fr_without_space, content);
+    log::info!("fr_without_space_matches: {:?}", fr_without_space_matches);
+    if fr_without_space_matches.len() == 1 {
+        return Some(fr_without_space_matches.pop().unwrap());
+    }
+
+    let mut fr_with_xxx_with_space_matches = get_unique_matches(&fr_with_xxx_with_space, content);
+    log::info!(
+        "fr_with_xxx_with_space_matches: {:?}",
+        fr_with_xxx_with_space_matches
+    );
+    if fr_with_xxx_with_space_matches.len() == 1 {
+        return Some(fr_with_xxx_with_space_matches.pop().unwrap());
+    }
+
+    // remove all spaces and try again
+    let whitespace_regex = Regex::new(r"\s+").unwrap();
+    let content_without_spaces = whitespace_regex.replace_all(content, "");
+    let mut joined_fr_without_space_matches =
+        get_unique_matches(&fr_without_space, &content_without_spaces);
+    log::info!(
+        "joined_fr_without_space_matches: {:?}",
+        joined_fr_without_space_matches
+    );
+    if joined_fr_without_space_matches.len() == 1 {
+        return Some(joined_fr_without_space_matches.pop().unwrap());
+    }
+
+    None
+}
+
 #[cfg(test)]
 mod tests {
-    use std::process::Command;
-
     use super::*;
 
     #[test]
@@ -321,18 +370,6 @@ mod tests {
         assert_eq!(split_2_columns(&lines), expected);
     }
 
-    #[allow(dead_code)]
-    fn read_file_using_poppler(path: &str) -> String {
-        let output = Command::new("pdftotext")
-            .arg("-layout")
-            .arg(path)
-            .arg("-")
-            .output()
-            .expect("Failed to execute command");
-
-        String::from_utf8_lossy(&output.stdout).to_string()
-    }
-
     #[test]
     fn test_one_rib() {
         let iban = "FR76 3000 1000 6449 1900 9562 088".to_string();
@@ -357,7 +394,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("BDFEFRPPCCT".to_string())
             }
         );
 
@@ -372,7 +410,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("BDFEFRPPCCT".to_string())
             }
         );
 
@@ -386,7 +425,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("PSSTFRPPNTE".to_string())
             }
         );
 
@@ -400,7 +440,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("BOUS FRPP XXX".to_string())
             }
         );
 
@@ -414,7 +455,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("CEPAFRPP444".to_string())
             }
         );
 
@@ -429,7 +471,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("AGRIFRPP847".to_string())
             }
         );
 
@@ -443,7 +486,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("CMCIFR2A".to_string())
             }
         );
 
@@ -457,7 +501,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("CMBRFR2BXXX".to_string())
             }
         );
 
@@ -467,7 +512,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("FTNOFRP1XXX".to_string())
             }
         );
 
@@ -481,7 +527,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("SOGEFRPP".to_string())
             }
         );
 
@@ -495,7 +542,8 @@ mod tests {
             to_rib(path),
             Rib {
                 titulaire,
-                iban: iban.clone()
+                iban: iban.clone(),
+                bic: Some("SOGEFRPP".to_string())
             }
         );
     }
