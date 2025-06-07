@@ -214,8 +214,6 @@ fn extract_iban(text: String) -> Option<String> {
 
 #[cfg(test)]
 mod tests {
-    use std::process::Command;
-
     use super::*;
 
     #[test]
@@ -319,18 +317,6 @@ mod tests {
         let expected = vec![vec!["once upon", "a time"], vec!["in a galaxy"]];
 
         assert_eq!(split_2_columns(&lines), expected);
-    }
-
-    #[allow(dead_code)]
-    fn read_file_using_poppler(path: &str) -> String {
-        let output = Command::new("pdftotext")
-            .arg("-layout")
-            .arg(path)
-            .arg("-")
-            .output()
-            .expect("Failed to execute command");
-
-        String::from_utf8_lossy(&output.stdout).to_string()
     }
 
     #[test]
