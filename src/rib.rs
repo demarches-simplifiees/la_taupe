@@ -38,6 +38,8 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
     let code_postal = Regex::new(r"^\d{5}").unwrap();
     let domiciliation = Regex::new(r"(?i)domiciliation").unwrap();
     let identification = Regex::new(r"(?i)identification").unwrap();
+    let civilite =
+        Regex::new(r"(?i)\s(m|monsieur|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
 
     let titulaire_index = lines.iter().position(|x| titulaire.is_match(x));
 
@@ -62,11 +64,26 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
 
     match (titulaire_index, end_index) {
         (Some(titulaire_index), Some(code_postal_index)) => {
-            let titulaire = lines[(titulaire_index + 1)..=(code_postal_index + titulaire_index)]
+            // if the titulaire line includes a civilite, we extract it
+            // ex : "Titulaire : Mlle Frida Kahlo"
+            // ex : "Intitulé du compte ML KHALO FRIDA OU M MATISSE H"
+            let mut maybe_first_line = None;
+
+            if let Some(mat) = civilite.find(&lines[titulaire_index]) {
+                let start_pos = mat.start();
+                maybe_first_line = Some(lines[titulaire_index][start_pos..].trim().to_string());
+            }
+
+            let mut titulaire = lines
+                [(titulaire_index + 1)..=(code_postal_index + titulaire_index)]
                 .iter()
-                // on enleve ": " en debut de ligne
+                // remove ": " at the beginning of the line
                 .map(|x| x.trim_start_matches(": ").to_string())
                 .collect::<Vec<String>>();
+
+            if let Some(first_line) = maybe_first_line {
+                titulaire.insert(0, first_line);
+            }
 
             if titulaire.is_empty() {
                 None
@@ -269,7 +286,7 @@ mod tests {
         test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/fortuneo.txt";
-        let titulaire = None;
+        let titulaire = Some(vec!["Madame Khalo Frida ou Monsieur Matisse Henri"]);
         let bic = "FTNOFRP1XXX";
         test_file(path, titulaire, &iban, bic);
 
