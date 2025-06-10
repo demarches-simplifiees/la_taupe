@@ -209,8 +209,6 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
 }
 
 fn extract_iban(text: String) -> Option<String> {
-    // let iban_re = Regex::new(r"(?<iban>[[:upper:]]{2}[[:digit:]O]{2}([[:space:]]+[[:alnum:]]{4}){3,7}([[:space:]]+[[:alnum:]]{0,4}){0,1})").unwrap();
-
     let french_iban_re = Regex::new(r"(?<iban>FR[[:digit:]]{2}([[:space:]]*[[:alnum:]]{4}){5})([[:space:]]*[[:alnum:]][[:digit:]]{2})").unwrap();
 
     let mut iban = french_iban_re
@@ -228,24 +226,7 @@ fn extract_iban(text: String) -> Option<String> {
             .map(|x| x.as_str().to_string());
     }
 
-    // replace O by 0 in the 3rd and 4th position
-    // to match the iban format
-    // TODO: should be able to add more rules to clean the iban
-    // depending on the country code
-    let cleaned_iban = iban.map(|x| {
-        x.chars()
-            .enumerate()
-            .map(|(i, c)| {
-                if (i == 2 || i == 3) && c == 'O' {
-                    '0'
-                } else {
-                    c
-                }
-            })
-            .collect::<String>()
-    });
-
-    cleaned_iban?.parse::<Iban>().ok().map(|x| x.to_string())
+    iban?.parse::<Iban>().ok().map(|x| x.to_string())
 }
 
 fn extract_fr_bic(content: &str) -> Option<String> {
@@ -301,13 +282,6 @@ mod tests {
     fn test_extract_iban() {
         let iban = "FR76 3000 1000 6449 1900 9562 088".to_string();
         assert_eq!(extract_iban(iban.clone()).unwrap(), iban);
-
-        // OCR error, O instead of 0 in the 3rd and 4th position
-        let weird_iban = "FRO5 2004 1000 0121 0436 2F02 027".to_string();
-        assert_eq!(
-            extract_iban(weird_iban),
-            Some("FR05 2004 1000 0121 0436 2F02 027".to_string())
-        );
     }
 
     #[test]
