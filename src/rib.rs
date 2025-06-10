@@ -168,204 +168,132 @@ mod tests {
                 .unwrap_or_else(|_| panic!("Failed to parse RIB from file: {}", path))
         }
 
+        fn test_file(path: &str, titulaire: Option<Vec<&str>>, iban: &str, bic: &str) {
+            let titulaire = titulaire.map(vec_to_string);
+            assert_eq!(
+                to_rib(path),
+                Rib {
+                    titulaire,
+                    iban: iban.to_string(),
+                    bic: Some(bic.to_string())
+                }
+            );
+        }
+
         let path = "tests/fixtures/rib/banque_populaire.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "M OU MME MATISSE HENRI",
             "51 RUE BERNARD ROY",
             "44100 NANTES",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("BDFEFRPPCCT".to_string())
-            }
-        );
+        ]);
+        let bic = "BDFEFRPPCCT";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/banque_populaire_2.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "M HENRI MATISSE OU MLLE",
             "FRIDA KAHLO",
             "31 AVENUE JULES RENARD",
             "44800 ST HERBLAIN",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("BDFEFRPPCCT".to_string())
-            }
-        );
+        ]);
+        let bic = "BDFEFRPPCCT";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/banque_postale.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "MR MATISSE HENRI",
             "243 RUE DES GRIVES",
             "44240 LA CHAPELLE SUR ERDRE",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("PSSTFRPPNTE".to_string())
-            }
-        );
+        ]);
+        let bic = "PSSTFRPPNTE";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/bourso.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "Mlle Kahlo Frida",
             "55 CHEMIN DU PETIT BOIS",
             "44400 REZE",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("BOUS FRPP XXX".to_string())
-            }
-        );
+        ]);
+        let bic = "BOUS FRPP XXX";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/caisse_epargne.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "MME KAHLO FRIDA OU M MATISSE",
             "143 ALLEE DES SALICAIRES",
             "44240 LA CHAPELLE SUR ERDRE",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("CEPAFRPP444".to_string())
-            }
-        );
+        ]);
+        let bic = "CEPAFRPP444";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/caisse_epargne_2.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "M MATISSE HENRI",
             "12 RUE VICTOR FORTUN",
             "44400 REZE",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("CEPAFRPP444".to_string())
-            }
-        );
+        ]);
+        let bic = "CEPAFRPP444";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/credit_agricole.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "MR OU MME MATISSE",
             "HENRI",
             "32 RUE EDOUARD TRAVIES",
             "44240 LA CHAPELLE SUR ERDRE",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("AGRIFRPP847".to_string())
-            }
-        );
+        ]);
+        let bic = "AGRIFRPP847";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/credit_agricole_2.txt";
-        let titulaire = Some(vec_to_string(vec!["MME KAHLO FRIDA"]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("AGRIFRPP847".to_string())
-            }
-        );
+        let titulaire = Some(vec!["MME KAHLO FRIDA"]);
+        let bic = "AGRIFRPP847";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/credit_mutuel.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "M HENRI MATISSE",
             "123 ALLEE DES ROSES",
             "44640 LE PELLERIN",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("CMCIFR2A".to_string())
-            }
-        );
+        ]);
+        let bic = "CMCIFR2A";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/credit_mutuel_2.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "M OU MME MATISSE HENRI",
             "54 RUE DE L HERONNIERE",
             "44000 NANTES",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("CMBRFR2BXXX".to_string())
-            }
-        );
+        ]);
+        let bic = "CMBRFR2BXXX";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/fortuneo.txt";
         let titulaire = None;
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("FTNOFRP1XXX".to_string())
-            }
-        );
+        let bic = "FTNOFRP1XXX";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/sg.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "Mlle Frida Khalo",
             "117 rue des bourdonnieres 204 batiment c",
             "44200 Nantes",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("SOGEFRPP".to_string())
-            }
-        );
+        ]);
+        let bic = "SOGEFRPP";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/sg_2.txt";
-        let titulaire = Some(vec_to_string(vec![
+        let titulaire = Some(vec![
             "SAS HENRI MATISSE",
             "18 RUE SADI CARNOT",
             "92120 MONTROUGE",
-        ]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("SOGEFRPP".to_string())
-            }
-        );
+        ]);
+        let bic = "SOGEFRPP";
+        test_file(path, titulaire, &iban, bic);
 
         let path = "tests/fixtures/rib/orange.txt";
-        let titulaire = Some(vec_to_string(vec!["M Matisse Henri"]));
-        assert_eq!(
-            to_rib(path),
-            Rib {
-                titulaire,
-                iban: iban.clone(),
-                bic: Some("GPBAFRPPXXX".to_string())
-            }
-        );
+        let titulaire = Some(vec!["M Matisse Henri"]);
+        let bic = "GPBAFRPPXXX";
+        test_file(path, titulaire, &iban, bic);
     }
 }
