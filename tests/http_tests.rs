@@ -101,3 +101,24 @@ fn unhandled_format() {
         "Unsupported file type: text/plain".to_string()
     );
 }
+
+#[test]
+fn empty_pdf() {
+    let response = Client::new()
+        .post("http://localhost:8080/analyze")
+        .json(&json!({
+            "url": "http://localhost:3333/la_taupe.pdf",
+            "hint": { "type": "rib" },
+        }))
+        .send()
+        .unwrap();
+
+    assert_eq!(response.status().as_u16(), 422);
+
+    let analysis: AnalysisError = response.json().unwrap();
+
+    assert_eq!(
+        analysis.body.unwrap(),
+        "Failed to extract text from PDF".to_string()
+    );
+}
