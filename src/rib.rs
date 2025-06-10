@@ -158,6 +158,14 @@ fn extract_fr_bic(content: &str) -> Option<String> {
         return Some(joined_fr_without_space_matches.pop().unwrap());
     }
 
+    // try known banks BICs
+    let caisse_epargne_bic = Regex::new(r"CEPAFRPP[A-Z0-9]{3}").unwrap();
+    let mut caisse_epargne_bic_matches =
+        get_unique_matches(&caisse_epargne_bic, &content_without_spaces);
+    if caisse_epargne_bic_matches.len() == 1 {
+        return Some(caisse_epargne_bic_matches.pop().unwrap());
+    }
+
     None
 }
 
@@ -248,6 +256,15 @@ mod tests {
             "M MATISSE HENRI",
             "12 RUE VICTOR FORTUN",
             "44400 REZE",
+        ]);
+        let bic = "CEPAFRPP444";
+        test_file(path, titulaire, &iban, bic);
+
+        let path = "tests/fixtures/rib/caisse_epargne_3.txt";
+        let titulaire = Some(vec![
+            "ML KHALO FRIDA OU M MATISSE H",
+            "35 RUE DU CEDRE",
+            "44240 LA CHAPELLE SUR ERDRE",
         ]);
         let bic = "CEPAFRPP444";
         test_file(path, titulaire, &iban, bic);
