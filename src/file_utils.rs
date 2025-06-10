@@ -45,7 +45,7 @@ pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
 
     let lines = String::from_utf8_lossy(&output.stdout).to_string();
 
-    if lines.is_empty() {
+    if lines.lines().count() == 1 && lines.trim().is_empty() {
         Err("Failed to extract text from PDF".to_string())
     } else {
         Ok(lines)
