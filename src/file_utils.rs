@@ -43,7 +43,13 @@ pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
 
     let output = child.wait_with_output().expect("Failed to wait on child");
 
-    Ok(String::from_utf8_lossy(&output.stdout).to_string())
+    let lines = String::from_utf8_lossy(&output.stdout).to_string();
+
+    if lines.is_empty() {
+        Err("Failed to extract text from PDF".to_string())
+    } else {
+        Ok(lines)
+    }
 }
 
 fn pdf_to_img(file: Vec<u8>) -> DynamicImage {
