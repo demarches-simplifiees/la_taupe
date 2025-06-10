@@ -1,0 +1,22 @@
+                       Relevé d'identité bancaire
+
+
+Ce relevé est destiné à tout organisme souhaitant
+connaître vos références bancaires pour domicilier des
+virements ou des prélèvements sur votre compte.
+
+Titulaire
+MME KAHLO FRIDA 
+Domiciliation
+NANTES CARRE LAFAYETTE
+
+Code Banque                       30001
+Code guichet                      00064
+Numéro de compte                  49190095620
+Clé RIB                           88
+
+IBAN (International bank account number)
+FR76 30001 00064 49190095620 88
+Code BIC (Bank Identification Code) - Code SWIFT
+AGRIFRPP847
+

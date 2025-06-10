@@ -166,6 +166,8 @@ fn split_left_right(block: &Block) -> Vec<Block> {
 fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
     let titulaire = Regex::new(r"(?i)titulaire|intitulé du compte").unwrap();
     let code_postal = Regex::new(r"^\d{5}").unwrap();
+    let domiciliation = Regex::new(r"(?i)domiciliation").unwrap();
+    let identification = Regex::new(r"(?i)identification").unwrap();
 
     let titulaire_index = lines.iter().position(|x| titulaire.is_match(x));
 
@@ -173,30 +175,58 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
         .iter()
         .position(|x| code_postal.is_match(x));
 
-    match (titulaire_index, code_postal_index) {
+    let domiciliation_index = lines[titulaire_index?..]
+        .iter()
+        .position(|x| domiciliation.is_match(x))
+        .map(|index| index - 1); // -1 because we exclude the domiciliation line itself
+
+    let identification_index = lines[titulaire_index?..]
+        .iter()
+        .position(|x| identification.is_match(x))
+        .map(|index| index - 1); // -1 because we exclude the identification line itself
+
+    let end_index = [code_postal_index, domiciliation_index, identification_index]
+        .iter()
+        .filter_map(|&x| x)
+        .min();
+
+    match (titulaire_index, end_index) {
         (Some(titulaire_index), Some(code_postal_index)) => {
             let titulaire = lines[(titulaire_index + 1)..=(code_postal_index + titulaire_index)]
                 .iter()
                 // on enleve ": " en debut de ligne
                 .map(|x| x.trim_start_matches(": ").to_string())
                 .collect::<Vec<String>>();
-            Some(titulaire)
+
+            if titulaire.is_empty() {
+                None
+            } else {
+                Some(titulaire)
+            }
         }
         _ => None,
     }
 }
 
 fn extract_iban(text: String) -> Option<String> {
-    // FR56 2004 1010 1114 6801 6D03 279
-    // max 34 char = 8*4 +2 = entete + 7*4 + 2 = entete + 3*4 (<- min belge) + 4 * 4 + 2
-    // [[:digit:]O] because of OCR error
-    let iban_re = Regex::new(r"(?<iban>[[:upper:]]{2}[[:digit:]O]{2}([[:space:]]+[[:alnum:]]{4}){3,7}([[:space:]]+[[:alnum:]]{0,4}){0,1})").unwrap();
+    // let iban_re = Regex::new(r"(?<iban>[[:upper:]]{2}[[:digit:]O]{2}([[:space:]]+[[:alnum:]]{4}){3,7}([[:space:]]+[[:alnum:]]{0,4}){0,1})").unwrap();
 
-    let iban = iban_re
+    let french_iban_re = Regex::new(r"(?<iban>FR[[:digit:]]{2}([[:space:]]*[[:alnum:]]{4}){5})([[:space:]]*[[:alnum:]][[:digit:]]{2})").unwrap();
+
+    let mut iban = french_iban_re
         .find(&text)
         .map(|x| x.as_str().to_string())
         // change multiple spaces by one space
         .map(|x| x.split_whitespace().collect::<Vec<&str>>().join(" "));
+
+    // sometimes the iban is written with weird space (credit_agricole_2.txt)
+    // so we try to match by removing all spaces
+    if iban.is_none() {
+        let text_without_spaces = text.replace(" ", "");
+        iban = french_iban_re
+            .find(&text_without_spaces)
+            .map(|x| x.as_str().to_string());
+    }
 
     // replace O by 0 in the 3rd and 4th position
     // to match the iban format
@@ -460,6 +490,21 @@ mod tests {
             }
         );
 
+        let path = "tests/fixtures/rib/caisse_epargne_2.txt";
+        let titulaire = Some(vec_to_string(vec![
+            "M MATISSE HENRI",
+            "12 RUE VICTOR FORTUN",
+            "44400 REZE",
+        ]));
+        assert_eq!(
+            to_rib(path),
+            Rib {
+                titulaire,
+                iban: iban.clone(),
+                bic: Some("CEPAFRPP444".to_string())
+            }
+        );
+
         let path = "tests/fixtures/rib/credit_agricole.txt";
         let titulaire = Some(vec_to_string(vec![
             "MR OU MME MATISSE",
@@ -467,6 +512,17 @@ mod tests {
             "32 RUE EDOUARD TRAVIES",
             "44240 LA CHAPELLE SUR ERDRE",
         ]));
+        assert_eq!(
+            to_rib(path),
+            Rib {
+                titulaire,
+                iban: iban.clone(),
+                bic: Some("AGRIFRPP847".to_string())
+            }
+        );
+
+        let path = "tests/fixtures/rib/credit_agricole_2.txt";
+        let titulaire = Some(vec_to_string(vec!["MME KAHLO FRIDA"]));
         assert_eq!(
             to_rib(path),
             Rib {
@@ -544,6 +600,17 @@ mod tests {
                 titulaire,
                 iban: iban.clone(),
                 bic: Some("SOGEFRPP".to_string())
+            }
+        );
+
+        let path = "tests/fixtures/rib/orange.txt";
+        let titulaire = Some(vec_to_string(vec!["M Matisse Henri"]));
+        assert_eq!(
+            to_rib(path),
+            Rib {
+                titulaire,
+                iban: iban.clone(),
+                bic: Some("GPBAFRPPXXX".to_string())
             }
         );
     }
