@@ -45,6 +45,17 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
     let titulaire_index = lines.iter().position(|x| titulaire.is_match(x));
 
     if let Some(titulaire_index) = titulaire_index {
+        let mut titulaire = Vec::<String>::new();
+
+        // if the titulaire line includes a civilite, we extract it
+        // ex : "Titulaire : Mlle Frida Kahlo"
+        // ex : "Intitulé du compte ML KHALO FRIDA OU M MATISSE H"
+        if let Some(found) = civilite.find(&lines[titulaire_index]) {
+            let start_pos = found.start();
+            let first_line = lines[titulaire_index][start_pos..].trim().to_string();
+            titulaire.push(first_line);
+        }
+
         let code_postal_index = lines[titulaire_index..]
             .iter()
             .position(|x| code_postal.is_match(x));
@@ -59,38 +70,23 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
             .filter_map(|&x| x)
             .min();
 
-        maybe_titulaire = match end_index {
-            Some(end_index) => {
-                // if the titulaire line includes a civilite, we extract it
-                // ex : "Titulaire : Mlle Frida Kahlo"
-                // ex : "Intitulé du compte ML KHALO FRIDA OU M MATISSE H"
-                let mut maybe_first_line = None;
+        if let Some(end_index) = end_index {
+            let mut more_titulaire = lines
+                [(titulaire_index + 1)..=(end_index + titulaire_index)]
+                .iter()
+                    // remove lines containing only 'word :' as 'Compte :'
+                    .filter(|x| !regex::Regex::new(r"^\s*\w+\s*:\s*$").unwrap().is_match(x))
+                    // remove ": " at the beginning of the line
+                    .map(|x| x.trim_start_matches(": ").to_string())
+                    .collect::<Vec<String>>();
 
-                if let Some(mat) = civilite.find(&lines[titulaire_index]) {
-                    let start_pos = mat.start();
-                    maybe_first_line = Some(lines[titulaire_index][start_pos..].trim().to_string());
-                }
+            titulaire.append(&mut more_titulaire);
+        }
 
-                let mut titulaire = lines
-                    [(titulaire_index + 1)..=(end_index + titulaire_index)]
-                    .iter()
-                        // remove lines containing only 'word :' as 'Compte :'
-                        .filter(|x| !regex::Regex::new(r"^\s*\w+\s*:\s*$").unwrap().is_match(x))
-                        // remove ": " at the beginning of the line
-                        .map(|x| x.trim_start_matches(": ").to_string())
-                        .collect::<Vec<String>>();
-
-                if let Some(first_line) = maybe_first_line {
-                    titulaire.insert(0, first_line);
-                }
-
-                if titulaire.is_empty() {
-                    None
-                } else {
-                    Some(titulaire)
-                }
-            }
-            _ => None,
+        if titulaire.is_empty() {
+            maybe_titulaire = None;
+        } else {
+            maybe_titulaire = Some(titulaire);
         };
     } else {
         let civilite_index = lines
@@ -386,6 +382,14 @@ mod tests {
     fn rib_lcl() {
         let path = "tests/fixtures/rib/lcl.txt";
         let titulaire = Some(vec!["M MATISSE HENRI"]);
+        let bic = "CRLYFRPP";
+        test_file(path, titulaire, IBAN, bic);
+    }
+
+    #[test]
+    fn rib_lcl_2() {
+        let path = "tests/fixtures/rib/lcl_2.txt";
+        let titulaire = Some(vec!["MLLE FRIDA KHALO"]);
         let bic = "CRLYFRPP";
         test_file(path, titulaire, IBAN, bic);
     }
