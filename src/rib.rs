@@ -38,8 +38,7 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
 
     let titulaire = Regex::new(r"(?i)titulaire|intitulé du compte").unwrap();
     let code_postal = Regex::new(r"^\d{5}").unwrap();
-    let domiciliation = Regex::new(r"(?i)domiciliation").unwrap();
-    let identification = Regex::new(r"(?i)identification").unwrap();
+    let stop_words = Regex::new(r"(?i)domiciliation|identification|iban").unwrap();
     let civilite =
         Regex::new(r"(?i)(^|\s)(m|monsieur|mr|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
 
@@ -50,17 +49,12 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
             .iter()
             .position(|x| code_postal.is_match(x));
 
-        let domiciliation_index = lines[titulaire_index..]
+        let stop_words_index = lines[titulaire_index..]
             .iter()
-            .position(|x| domiciliation.is_match(x))
+            .position(|x| stop_words.is_match(x))
             .map(|index| index - 1); // -1 because we exclude the domiciliation line itself
 
-        let identification_index = lines[titulaire_index..]
-            .iter()
-            .position(|x| identification.is_match(x))
-            .map(|index| index - 1); // -1 because we exclude the identification line itself
-
-        let end_index = [code_postal_index, domiciliation_index, identification_index]
+        let end_index = [code_postal_index, stop_words_index]
             .iter()
             .filter_map(|&x| x)
             .min();
@@ -80,6 +74,8 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
                 let mut titulaire = lines
                     [(titulaire_index + 1)..=(end_index + titulaire_index)]
                     .iter()
+                        // remove lines containing only 'word :' as 'Compte :'
+                        .filter(|x| !regex::Regex::new(r"^\s*\w+\s*:\s*$").unwrap().is_match(x))
                         // remove ": " at the beginning of the line
                         .map(|x| x.trim_start_matches(": ").to_string())
                         .collect::<Vec<String>>();
@@ -105,17 +101,12 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
             .iter()
             .position(|x| code_postal.is_match(x));
 
-        let domiciliation_index = lines[civilite_index?..]
+        let stop_word_index = lines[civilite_index?..]
             .iter()
-            .position(|x| domiciliation.is_match(x))
+            .position(|x| stop_words.is_match(x))
             .map(|index| index - 1); // -1 because we exclude the domiciliation line itself
 
-        let identification_index = lines[civilite_index?..]
-            .iter()
-            .position(|x| identification.is_match(x))
-            .map(|index| index - 1); // -1 because we exclude the identification line itself
-
-        let end_index = [code_postal_index, domiciliation_index, identification_index]
+        let end_index = [code_postal_index, stop_word_index]
             .iter()
             .filter_map(|&x| x)
             .min();
@@ -388,6 +379,14 @@ mod tests {
         let path = "tests/fixtures/rib/fortuneo.txt";
         let titulaire = Some(vec!["Madame Khalo Frida ou Monsieur Matisse Henri"]);
         let bic = "FTNOFRP1XXX";
+        test_file(path, titulaire, IBAN, bic);
+    }
+
+    #[test]
+    fn rib_lcl() {
+        let path = "tests/fixtures/rib/lcl.txt";
+        let titulaire = Some(vec!["M MATISSE HENRI"]);
+        let bic = "CRLYFRPP";
         test_file(path, titulaire, IBAN, bic);
     }
 
