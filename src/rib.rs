@@ -38,7 +38,7 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
 
     let titulaire = Regex::new(r"(?i)titulaire|intitulé du compte").unwrap();
     let code_postal = Regex::new(r"^\d{5}").unwrap();
-    let stop_words = Regex::new(r"(?i)domiciliation|identification|iban").unwrap();
+    let stop_words = Regex::new(r"(?i)domiciliation|identification|iban|cadre réservé|numéro de compte").unwrap();
     let civilite =
         Regex::new(r"(?i)(^|\s)(m|monsieur|mr|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
 
@@ -260,6 +260,17 @@ mod tests {
             "MR MATISSE HENRI",
             "243 RUE DES GRIVES",
             "44240 LA CHAPELLE SUR ERDRE",
+        ]);
+        let bic = "PSSTFRPPNTE";
+        test_file(path, titulaire, IBAN, bic);
+    }
+
+    #[test]
+    fn rib_banque_postale_2() {
+        let path = "tests/fixtures/rib/banque_postale_2.txt";
+        let titulaire = Some(vec![
+            "MLE FRIDA KHALO",
+            "OU MR MATISSE HENRI",
         ]);
         let bic = "PSSTFRPPNTE";
         test_file(path, titulaire, IBAN, bic);
