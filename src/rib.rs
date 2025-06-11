@@ -41,7 +41,7 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
     let domiciliation = Regex::new(r"(?i)domiciliation").unwrap();
     let identification = Regex::new(r"(?i)identification").unwrap();
     let civilite =
-        Regex::new(r"(?i)(^|\s)(m|monsieur|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
+        Regex::new(r"(?i)(^|\s)(m|monsieur|mr|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
 
     let titulaire_index = lines.iter().position(|x| titulaire.is_match(x));
 
