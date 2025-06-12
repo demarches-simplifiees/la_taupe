@@ -96,7 +96,8 @@ impl TryFrom<&Path> for Analysis {
     type Error = String;
 
     fn try_from(file_path: &Path) -> Result<Self, String> {
-        let content = std::fs::read(file_path).map_err(|e| format!("Failed to read file: {}", e))?;
+        let content =
+            std::fs::read(file_path).map_err(|e| format!("Failed to read file: {}", e))?;
         Analysis::try_from((content, None))
     }
 }

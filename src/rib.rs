@@ -38,7 +38,9 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
 
     let titulaire = Regex::new(r"(?i)titulaire|intitulé du compte").unwrap();
     let code_postal = Regex::new(r"^\d{5}").unwrap();
-    let stop_words = Regex::new(r"(?i)domiciliation|identification|iban|cadre réservé|numéro de compte").unwrap();
+    let stop_words =
+        Regex::new(r"(?i)domiciliation|identification|iban|cadre réservé|numéro de compte")
+            .unwrap();
     let civilite =
         Regex::new(r"(?i)(^|\s)(m|monsieur|mr|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
 
@@ -71,14 +73,13 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
             .min();
 
         if let Some(end_index) = end_index {
-            let mut more_titulaire = lines
-                [(titulaire_index + 1)..=(end_index + titulaire_index)]
+            let mut more_titulaire = lines[(titulaire_index + 1)..=(end_index + titulaire_index)]
                 .iter()
-                    // remove lines containing only 'word :' as 'Compte :'
-                    .filter(|x| !regex::Regex::new(r"^\s*\w+\s*:\s*$").unwrap().is_match(x))
-                    // remove ": " at the beginning of the line
-                    .map(|x| x.trim_start_matches(": ").to_string())
-                    .collect::<Vec<String>>();
+                // remove lines containing only 'word :' as 'Compte :'
+                .filter(|x| !regex::Regex::new(r"^\s*\w+\s*:\s*$").unwrap().is_match(x))
+                // remove ": " at the beginning of the line
+                .map(|x| x.trim_start_matches(": ").to_string())
+                .collect::<Vec<String>>();
 
             titulaire.append(&mut more_titulaire);
         }
@@ -89,9 +90,7 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
             maybe_titulaire = Some(titulaire);
         };
     } else {
-        let civilite_index = lines
-            .iter()
-            .position(|x| civilite.is_match(x));
+        let civilite_index = lines.iter().position(|x| civilite.is_match(x));
 
         let code_postal_index = lines[civilite_index?..]
             .iter()
@@ -118,9 +117,7 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
     }
 
     // final check to remove obvious false positives
-    maybe_titulaire.filter(|titulaire| {
-        titulaire.len() < 10 
-    })
+    maybe_titulaire.filter(|titulaire| titulaire.len() < 10)
 }
 
 fn extract_iban(text: String) -> Option<String> {
@@ -209,19 +206,18 @@ mod tests {
 
     #[test]
     fn extract_titulaire_one_line_titulaire() {
-        let lines = vec![
-            "Titulaire : Mlle Frida Kahlo".to_string(),
-        ];
+        let lines = vec!["Titulaire : Mlle Frida Kahlo".to_string()];
         let expected = Some(vec!["Mlle Frida Kahlo".to_string()]);
         assert_eq!(extract_titulaire(lines), expected);
     }
 
     #[test]
     fn extract_titulaire_obviously_too_long() {
-        let lines = vec![
-            "Titulaire : Mlle Frida Kahlo".to_string(),
-        ];
-        let mut lines = lines.into_iter().chain(vec!["a".to_string(); 9]).collect::<Vec<String>>();
+        let lines = vec!["Titulaire : Mlle Frida Kahlo".to_string()];
+        let mut lines = lines
+            .into_iter()
+            .chain(vec!["a".to_string(); 9])
+            .collect::<Vec<String>>();
         lines.push("domiciliation".to_string()); // add a stop word
 
         assert_eq!(extract_titulaire(lines), None);
@@ -291,10 +287,7 @@ mod tests {
     #[test]
     fn rib_banque_postale_2() {
         let path = "tests/fixtures/rib/banque_postale_2.txt";
-        let titulaire = Some(vec![
-            "MLE FRIDA KHALO",
-            "OU MR MATISSE HENRI",
-        ]);
+        let titulaire = Some(vec!["MLE FRIDA KHALO", "OU MR MATISSE HENRI"]);
         let bic = "PSSTFRPPNTE";
         test_file(path, titulaire, IBAN, bic);
     }
