@@ -117,7 +117,10 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
         }
     }
 
-    maybe_titulaire
+    // final check to remove obvious false positives
+    maybe_titulaire.filter(|titulaire| {
+        titulaire.len() < 10 
+    })
 }
 
 fn extract_iban(text: String) -> Option<String> {
@@ -202,6 +205,26 @@ mod tests {
     fn test_extract_iban() {
         let iban = "FR76 3000 1000 6449 1900 9562 088".to_string();
         assert_eq!(extract_iban(iban.clone()).unwrap(), iban);
+    }
+
+    #[test]
+    fn extract_titulaire_one_line_titulaire() {
+        let lines = vec![
+            "Titulaire : Mlle Frida Kahlo".to_string(),
+        ];
+        let expected = Some(vec!["Mlle Frida Kahlo".to_string()]);
+        assert_eq!(extract_titulaire(lines), expected);
+    }
+
+    #[test]
+    fn extract_titulaire_obviously_too_long() {
+        let lines = vec![
+            "Titulaire : Mlle Frida Kahlo".to_string(),
+        ];
+        let mut lines = lines.into_iter().chain(vec!["a".to_string(); 9]).collect::<Vec<String>>();
+        lines.push("domiciliation".to_string()); // add a stop word
+
+        assert_eq!(extract_titulaire(lines), None);
     }
 
     fn vec_to_string(v: Vec<&str>) -> Vec<String> {
