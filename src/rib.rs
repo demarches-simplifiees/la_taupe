@@ -34,65 +34,90 @@ impl TryFrom<String> for Rib {
 }
 
 fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
+    let mut maybe_titulaire: Option<Vec<String>> = None;
+
     let titulaire = Regex::new(r"(?i)titulaire|intitulé du compte").unwrap();
     let code_postal = Regex::new(r"^\d{5}").unwrap();
-    let domiciliation = Regex::new(r"(?i)domiciliation").unwrap();
-    let identification = Regex::new(r"(?i)identification").unwrap();
+    let stop_words =
+        Regex::new(r"(?i)domiciliation|identification|iban|cadre réservé|numéro de compte")
+            .unwrap();
     let civilite =
-        Regex::new(r"(?i)\s(m|monsieur|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
+        Regex::new(r"(?i)(^|\s)(m|monsieur|mr|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
 
     let titulaire_index = lines.iter().position(|x| titulaire.is_match(x));
 
-    let code_postal_index = lines[titulaire_index?..]
-        .iter()
-        .position(|x| code_postal.is_match(x));
+    if let Some(titulaire_index) = titulaire_index {
+        let mut titulaire = Vec::<String>::new();
 
-    let domiciliation_index = lines[titulaire_index?..]
-        .iter()
-        .position(|x| domiciliation.is_match(x))
-        .map(|index| index - 1); // -1 because we exclude the domiciliation line itself
+        // if the titulaire line includes a civilite, we extract it
+        // ex : "Titulaire : Mlle Frida Kahlo"
+        // ex : "Intitulé du compte ML KHALO FRIDA OU M MATISSE H"
+        if let Some(found) = civilite.find(&lines[titulaire_index]) {
+            let start_pos = found.start();
+            let first_line = lines[titulaire_index][start_pos..].trim().to_string();
+            titulaire.push(first_line);
+        }
 
-    let identification_index = lines[titulaire_index?..]
-        .iter()
-        .position(|x| identification.is_match(x))
-        .map(|index| index - 1); // -1 because we exclude the identification line itself
+        let code_postal_index = lines[titulaire_index..]
+            .iter()
+            .position(|x| code_postal.is_match(x));
 
-    let end_index = [code_postal_index, domiciliation_index, identification_index]
-        .iter()
-        .filter_map(|&x| x)
-        .min();
+        let stop_words_index = lines[titulaire_index..]
+            .iter()
+            .position(|x| stop_words.is_match(x))
+            .map(|index| index - 1); // -1 because we exclude the domiciliation line itself
 
-    match (titulaire_index, end_index) {
-        (Some(titulaire_index), Some(code_postal_index)) => {
-            // if the titulaire line includes a civilite, we extract it
-            // ex : "Titulaire : Mlle Frida Kahlo"
-            // ex : "Intitulé du compte ML KHALO FRIDA OU M MATISSE H"
-            let mut maybe_first_line = None;
+        let end_index = [code_postal_index, stop_words_index]
+            .iter()
+            .filter_map(|&x| x)
+            .min();
 
-            if let Some(mat) = civilite.find(&lines[titulaire_index]) {
-                let start_pos = mat.start();
-                maybe_first_line = Some(lines[titulaire_index][start_pos..].trim().to_string());
-            }
-
-            let mut titulaire = lines
-                [(titulaire_index + 1)..=(code_postal_index + titulaire_index)]
+        if let Some(end_index) = end_index {
+            let mut more_titulaire = lines[(titulaire_index + 1)..=(end_index + titulaire_index)]
                 .iter()
+                // remove lines containing only 'word :' as 'Compte :'
+                .filter(|x| !regex::Regex::new(r"^\s*\w+\s*:\s*$").unwrap().is_match(x))
                 // remove ": " at the beginning of the line
                 .map(|x| x.trim_start_matches(": ").to_string())
                 .collect::<Vec<String>>();
 
-            if let Some(first_line) = maybe_first_line {
-                titulaire.insert(0, first_line);
-            }
-
-            if titulaire.is_empty() {
-                None
-            } else {
-                Some(titulaire)
-            }
+            titulaire.append(&mut more_titulaire);
         }
-        _ => None,
+
+        if titulaire.is_empty() {
+            maybe_titulaire = None;
+        } else {
+            maybe_titulaire = Some(titulaire);
+        };
+    } else {
+        let civilite_index = lines.iter().position(|x| civilite.is_match(x));
+
+        let code_postal_index = lines[civilite_index?..]
+            .iter()
+            .position(|x| code_postal.is_match(x));
+
+        let stop_word_index = lines[civilite_index?..]
+            .iter()
+            .position(|x| stop_words.is_match(x))
+            .map(|index| index - 1); // -1 because we exclude the domiciliation line itself
+
+        let end_index = [code_postal_index, stop_word_index]
+            .iter()
+            .filter_map(|&x| x)
+            .min();
+
+        if end_index.is_some() {
+            let titulaire = lines[civilite_index?..=(end_index.unwrap() + civilite_index?)]
+                .iter()
+                .map(|x| x.trim_start_matches(": ").to_string())
+                .collect::<Vec<String>>();
+
+            maybe_titulaire = Some(titulaire);
+        }
     }
+
+    // final check to remove obvious false positives
+    maybe_titulaire.filter(|titulaire| titulaire.len() < 10)
 }
 
 fn extract_iban(text: String) -> Option<String> {
@@ -180,31 +205,50 @@ mod tests {
     }
 
     #[test]
-    fn test_one_rib() {
-        let iban = "FR76 3000 1000 6449 1900 9562 088".to_string();
+    fn extract_titulaire_one_line_titulaire() {
+        let lines = vec!["Titulaire : Mlle Frida Kahlo".to_string()];
+        let expected = Some(vec!["Mlle Frida Kahlo".to_string()]);
+        assert_eq!(extract_titulaire(lines), expected);
+    }
 
-        fn vec_to_string(v: Vec<&str>) -> Vec<String> {
-            v.iter().map(|x| x.to_string()).collect()
-        }
+    #[test]
+    fn extract_titulaire_obviously_too_long() {
+        let lines = vec!["Titulaire : Mlle Frida Kahlo".to_string()];
+        let mut lines = lines
+            .into_iter()
+            .chain(vec!["a".to_string(); 9])
+            .collect::<Vec<String>>();
+        lines.push("domiciliation".to_string()); // add a stop word
 
-        fn to_rib(path: &str) -> Rib {
-            let layout_text = std::fs::read_to_string(path).unwrap();
-            Rib::try_from(layout_text)
-                .unwrap_or_else(|_| panic!("Failed to parse RIB from file: {}", path))
-        }
+        assert_eq!(extract_titulaire(lines), None);
+    }
 
-        fn test_file(path: &str, titulaire: Option<Vec<&str>>, iban: &str, bic: &str) {
-            let titulaire = titulaire.map(vec_to_string);
-            assert_eq!(
-                to_rib(path),
-                Rib {
-                    titulaire,
-                    iban: iban.to_string(),
-                    bic: Some(bic.to_string())
-                }
-            );
-        }
+    fn vec_to_string(v: Vec<&str>) -> Vec<String> {
+        v.iter().map(|x| x.to_string()).collect()
+    }
 
+    fn to_rib(path: &str) -> Rib {
+        let layout_text = std::fs::read_to_string(path).unwrap();
+        Rib::try_from(layout_text)
+            .unwrap_or_else(|_| panic!("Failed to parse RIB from file: {}", path))
+    }
+
+    fn test_file(path: &str, titulaire: Option<Vec<&str>>, iban: &str, bic: &str) {
+        let titulaire = titulaire.map(vec_to_string);
+        assert_eq!(
+            to_rib(path),
+            Rib {
+                titulaire,
+                iban: iban.to_string(),
+                bic: Some(bic.to_string())
+            }
+        );
+    }
+
+    static IBAN: &str = "FR76 3000 1000 6449 1900 9562 088";
+
+    #[test]
+    fn rib_banque_populaire() {
         let path = "tests/fixtures/rib/banque_populaire.txt";
         let titulaire = Some(vec![
             "M OU MME MATISSE HENRI",
@@ -212,8 +256,11 @@ mod tests {
             "44100 NANTES",
         ]);
         let bic = "BDFEFRPPCCT";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_banque_populaire_2() {
         let path = "tests/fixtures/rib/banque_populaire_2.txt";
         let titulaire = Some(vec![
             "M HENRI MATISSE OU MLLE",
@@ -222,8 +269,11 @@ mod tests {
             "44800 ST HERBLAIN",
         ]);
         let bic = "BDFEFRPPCCT";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_banque_postale() {
         let path = "tests/fixtures/rib/banque_postale.txt";
         let titulaire = Some(vec![
             "MR MATISSE HENRI",
@@ -231,8 +281,19 @@ mod tests {
             "44240 LA CHAPELLE SUR ERDRE",
         ]);
         let bic = "PSSTFRPPNTE";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_banque_postale_2() {
+        let path = "tests/fixtures/rib/banque_postale_2.txt";
+        let titulaire = Some(vec!["MLE FRIDA KHALO", "OU MR MATISSE HENRI"]);
+        let bic = "PSSTFRPPNTE";
+        test_file(path, titulaire, IBAN, bic);
+    }
+
+    #[test]
+    fn rib_bourso() {
         let path = "tests/fixtures/rib/bourso.txt";
         let titulaire = Some(vec![
             "Mlle Kahlo Frida",
@@ -240,8 +301,11 @@ mod tests {
             "44400 REZE",
         ]);
         let bic = "BOUS FRPP XXX";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_caisse_epargne() {
         let path = "tests/fixtures/rib/caisse_epargne.txt";
         let titulaire = Some(vec![
             "MME KAHLO FRIDA OU M MATISSE",
@@ -249,8 +313,11 @@ mod tests {
             "44240 LA CHAPELLE SUR ERDRE",
         ]);
         let bic = "CEPAFRPP444";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_caisse_epargne_2() {
         let path = "tests/fixtures/rib/caisse_epargne_2.txt";
         let titulaire = Some(vec![
             "M MATISSE HENRI",
@@ -258,8 +325,11 @@ mod tests {
             "44400 REZE",
         ]);
         let bic = "CEPAFRPP444";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_caisse_epargne_3() {
         let path = "tests/fixtures/rib/caisse_epargne_3.txt";
         let titulaire = Some(vec![
             "ML KHALO FRIDA OU M MATISSE H",
@@ -267,8 +337,11 @@ mod tests {
             "44240 LA CHAPELLE SUR ERDRE",
         ]);
         let bic = "CEPAFRPP444";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_credit_agricole() {
         let path = "tests/fixtures/rib/credit_agricole.txt";
         let titulaire = Some(vec![
             "MR OU MME MATISSE",
@@ -277,13 +350,31 @@ mod tests {
             "44240 LA CHAPELLE SUR ERDRE",
         ]);
         let bic = "AGRIFRPP847";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_credit_agricole_2() {
         let path = "tests/fixtures/rib/credit_agricole_2.txt";
         let titulaire = Some(vec!["MME KAHLO FRIDA"]);
         let bic = "AGRIFRPP847";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_credit_agricole_3() {
+        let path = "tests/fixtures/rib/credit_agricole_3.txt";
+        let titulaire = Some(vec![
+            "MLLE FRIDA KHALO",
+            "15 RUE MARYSE BASTIE",
+            "44230 ST SEBASTIEN SUR LOIRE",
+        ]);
+        let bic = "AGRIFRPP847";
+        test_file(path, titulaire, IBAN, bic);
+    }
+
+    #[test]
+    fn rib_credit_mutuel() {
         let path = "tests/fixtures/rib/credit_mutuel.txt";
         let titulaire = Some(vec![
             "M HENRI MATISSE",
@@ -291,8 +382,11 @@ mod tests {
             "44640 LE PELLERIN",
         ]);
         let bic = "CMCIFR2A";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_credit_mutuel_2() {
         let path = "tests/fixtures/rib/credit_mutuel_2.txt";
         let titulaire = Some(vec![
             "M OU MME MATISSE HENRI",
@@ -300,13 +394,35 @@ mod tests {
             "44000 NANTES",
         ]);
         let bic = "CMBRFR2BXXX";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_fortuneo() {
         let path = "tests/fixtures/rib/fortuneo.txt";
         let titulaire = Some(vec!["Madame Khalo Frida ou Monsieur Matisse Henri"]);
         let bic = "FTNOFRP1XXX";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_lcl() {
+        let path = "tests/fixtures/rib/lcl.txt";
+        let titulaire = Some(vec!["M MATISSE HENRI"]);
+        let bic = "CRLYFRPP";
+        test_file(path, titulaire, IBAN, bic);
+    }
+
+    #[test]
+    fn rib_lcl_2() {
+        let path = "tests/fixtures/rib/lcl_2.txt";
+        let titulaire = Some(vec!["MLLE FRIDA KHALO"]);
+        let bic = "CRLYFRPP";
+        test_file(path, titulaire, IBAN, bic);
+    }
+
+    #[test]
+    fn rib_sg() {
         let path = "tests/fixtures/rib/sg.txt";
         let titulaire = Some(vec![
             "Mlle Frida Khalo",
@@ -314,8 +430,11 @@ mod tests {
             "44200 Nantes",
         ]);
         let bic = "SOGEFRPP";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_sg_2() {
         let path = "tests/fixtures/rib/sg_2.txt";
         let titulaire = Some(vec![
             "SAS HENRI MATISSE",
@@ -323,11 +442,14 @@ mod tests {
             "92120 MONTROUGE",
         ]);
         let bic = "SOGEFRPP";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
+    }
 
+    #[test]
+    fn rib_orange() {
         let path = "tests/fixtures/rib/orange.txt";
         let titulaire = Some(vec!["M Matisse Henri"]);
         let bic = "GPBAFRPPXXX";
-        test_file(path, titulaire, &iban, bic);
+        test_file(path, titulaire, IBAN, bic);
     }
 }

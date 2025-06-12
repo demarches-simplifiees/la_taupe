@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     datamatrix::fetch_datamatrix,
-    file_utils::{bytes_to_img, file_to_img, pdf_bytes_to_string},
+    file_utils::{bytes_to_img, pdf_bytes_to_string},
     twoddoc::{ddoc::Ddoc, parse},
 };
 
@@ -96,12 +96,8 @@ impl TryFrom<&Path> for Analysis {
     type Error = String;
 
     fn try_from(file_path: &Path) -> Result<Self, String> {
-        let img = file_to_img(file_path)?;
-        let datamatrix = fetch_datamatrix(img);
-
-        Ok(Analysis {
-            ddoc: datamatrix.map(|datamatrix| parse(&datamatrix).unwrap()),
-            rib: None,
-        })
+        let content =
+            std::fs::read(file_path).map_err(|e| format!("Failed to read file: {}", e))?;
+        Analysis::try_from((content, None))
     }
 }

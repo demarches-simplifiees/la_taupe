@@ -1,14 +1,8 @@
 use image::DynamicImage;
 use std::{
     io::Write,
-    path::Path,
     process::{Command, Stdio},
 };
-
-pub fn file_to_img(file_name: &Path) -> Result<DynamicImage, String> {
-    let content = std::fs::read(file_name).map_err(|e| format!("Failed to read file: {}", e))?;
-    bytes_to_img(content)
-}
 
 pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
     let filetype = tree_magic_mini::from_u8(&bytes);
@@ -68,26 +62,4 @@ fn pdf_to_img(file: Vec<u8>) -> DynamicImage {
     let output = child.wait_with_output().expect("Failed to wait on child");
 
     image::load_from_memory(&output.stdout).expect("Failed to load image from bytes")
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_file_to_img() {
-        let img_from_pdf = file_to_img(Path::new(
-            "tests/fixtures/2ddoc/justificatif_de_domicile.pdf",
-        ))
-        .unwrap();
-        assert_eq!(img_from_pdf.width(), 1241);
-        assert_eq!(img_from_pdf.height(), 1754);
-
-        let img_from_png = file_to_img(Path::new(
-            "tests/fixtures/2ddoc/justificatif_de_domicile.png",
-        ))
-        .unwrap();
-        assert_eq!(img_from_png.width(), 119);
-        assert_eq!(img_from_png.height(), 122);
-    }
 }
