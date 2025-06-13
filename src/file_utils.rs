@@ -17,12 +17,6 @@ pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
 }
 
 pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
-    let filetype = tree_magic_mini::from_u8(&bytes);
-
-    if filetype != "application/pdf" {
-        return Err("Only PDF files are supported for RIB analysis".to_string());
-    };
-
     let mut child = Command::new("pdftotext")
         .args(["-layout", "-", "-"])
         .stdin(Stdio::piped())
