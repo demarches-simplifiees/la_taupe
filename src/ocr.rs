@@ -5,6 +5,11 @@ const DETECTION_MODEL: &[u8] = include_bytes!("../models/text-detection.rten");
 const RECOGNITION_MODEL: &[u8] = include_bytes!("../models/text-recognition.rten");
 
 pub fn image_bytes_to_string(content: Vec<u8>) -> String {
+    #[allow(clippy::const_is_empty)]
+    if DETECTION_MODEL.is_empty() || RECOGNITION_MODEL.is_empty() {
+        panic!("--> ocrs models are empty in models/ directory. Please run `download_models.sh` to download the models.");
+    }
+
     // 10 ms to load the models
     let detection_model = Model::load_static_slice(DETECTION_MODEL).unwrap();
     let recognition_model = Model::load_static_slice(RECOGNITION_MODEL).unwrap();
