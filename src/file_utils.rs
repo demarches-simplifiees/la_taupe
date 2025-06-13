@@ -4,6 +4,8 @@ use std::{
     process::{Command, Stdio},
 };
 
+use crate::ocr::image_to_string;
+
 pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
     let filetype = tree_magic_mini::from_u8(&bytes);
 
@@ -17,6 +19,7 @@ pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
 }
 
 pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
+    let cloned_bytes = bytes.clone();
     let mut child = Command::new("pdftotext")
         .args(["-layout", "-", "-"])
         .stdin(Stdio::piped())
@@ -31,13 +34,20 @@ pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
 
     let output = child.wait_with_output().expect("Failed to wait on child");
 
-    let lines = String::from_utf8_lossy(&output.stdout).to_string();
+    let mut text = String::from_utf8_lossy(&output.stdout).to_string();
 
-    if lines.lines().count() == 1 && lines.trim().is_empty() {
-        Err("Failed to extract text from PDF".to_string())
-    } else {
-        Ok(lines)
+    if !text.trim().is_empty() {
+        return Ok(text);
     }
+
+    let img = pdf_to_img(cloned_bytes);
+    text = image_to_string(img);
+
+    if !text.trim().is_empty() {
+        return Ok(text);
+    }
+
+    Err("Failed to extract text from PDF".to_string())
 }
 
 fn pdf_to_img(file: Vec<u8>) -> DynamicImage {
