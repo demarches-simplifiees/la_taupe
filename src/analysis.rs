@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     datamatrix::fetch_datamatrix,
     file_utils::{bytes_to_img, pdf_bytes_to_string},
+    ocr::image_bytes_to_string,
     twoddoc::{ddoc::Ddoc, parse},
 };
 
@@ -32,8 +33,17 @@ pub enum Type {
 }
 
 fn vec_to_rib(content: Vec<u8>) -> Result<Rib, String> {
-    let string_rib = pdf_bytes_to_string(content)?;
-    Rib::try_from(string_rib)
+    let filetype = tree_magic_mini::from_u8(&content);
+
+    if filetype == "application/pdf" {
+        let string_rib = pdf_bytes_to_string(content)?;
+        Rib::try_from(string_rib)
+    } else if filetype == "image/png" || filetype == "image/jpeg" {
+        let string_rib = image_bytes_to_string(content);
+        Rib::try_from(string_rib)
+    } else {
+        Err(format!("Unsupported file type: {}", filetype))
+    }
 }
 
 fn vec_to_ddoc(content: Vec<u8>) -> Result<Ddoc, String> {
