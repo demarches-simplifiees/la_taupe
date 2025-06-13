@@ -1,3 +1,4 @@
+use image::DynamicImage;
 use ocrs::{ImageSource, OcrEngine, OcrEngineParams};
 use rten::Model;
 
@@ -5,6 +6,14 @@ const DETECTION_MODEL: &[u8] = include_bytes!("../models/text-detection.rten");
 const RECOGNITION_MODEL: &[u8] = include_bytes!("../models/text-recognition.rten");
 
 pub fn image_bytes_to_string(content: Vec<u8>) -> String {
+    let img = image::load_from_memory(&content).expect("Failed to load image from bytes");
+
+    image_to_string(img)
+}
+
+pub fn image_to_string(img: DynamicImage) -> String {
+    let img = img.into_rgb8();
+
     #[allow(clippy::const_is_empty)]
     if DETECTION_MODEL.is_empty() || RECOGNITION_MODEL.is_empty() {
         panic!("--> ocrs models are empty in models/ directory. Please run `download_models.sh` to download the models.");
@@ -20,11 +29,6 @@ pub fn image_bytes_to_string(content: Vec<u8>) -> String {
         ..Default::default()
     })
     .unwrap();
-
-    // build image from Vec<u8>
-    let img = image::load_from_memory(&content)
-        .expect("Failed to load image from bytes")
-        .into_rgb8();
 
     // Apply standard image pre-processing expected by this library (convert
     // to greyscale, map range to [-0.5, 0.5]).
