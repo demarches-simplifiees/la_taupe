@@ -1,4 +1,9 @@
-use image::DynamicImage;
+use std::{
+    io::{Cursor, Write},
+    process::{Command, Stdio},
+};
+
+use image::{DynamicImage, ImageFormat};
 use ocrs::{ImageSource, OcrEngine, OcrEngineParams};
 use rten::Model;
 
@@ -12,6 +17,10 @@ pub fn image_bytes_to_string(content: Vec<u8>) -> String {
 }
 
 pub fn image_to_string(img: DynamicImage) -> String {
+    img_to_string_using_tesseract(img)
+}
+
+pub fn image_to_string_using_ocrs(img: DynamicImage) -> String {
     let img = img.into_rgb8();
 
     #[allow(clippy::const_is_empty)]
@@ -54,4 +63,52 @@ pub fn image_to_string(img: DynamicImage) -> String {
         .map(|l| l.to_string())
         .collect::<Vec<String>>()
         .join("\n")
+}
+
+pub fn increase_image_size_if_needed(img: DynamicImage) -> DynamicImage {
+    // si la largeur ou la hauteur est inférieur a 500 on multiply par 2
+    if img.width() >= 500 && img.height() >= 500 {
+        return img;
+    }
+
+    // increase * 2 if the image is too small
+    img.resize(
+        img.width() * 2,
+        img.height() * 2,
+        image::imageops::FilterType::Lanczos3,
+    )
+}
+
+pub fn img_to_string_using_tesseract(img: DynamicImage) -> String {
+    let img = increase_image_size_if_needed(img);
+
+    let mut buffer = Cursor::new(Vec::new());
+    img.write_to(&mut buffer, ImageFormat::Png).unwrap();
+    let vec = buffer.into_inner();
+
+    let mut child = Command::new("tesseract")
+        .args([
+            "--psm",
+            "12",
+            "-c",
+            "preserve_interword_spaces=1",
+            "-l",
+            "fra",
+            "-",
+            "-",
+        ])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("Failed to start pdftotext");
+
+    let mut stdin = child.stdin.take().expect("Failed to open stdin");
+    std::thread::spawn(move || {
+        stdin.write_all(&vec).expect("Failed to write to stdin");
+    });
+
+    let output = child.wait_with_output().expect("Failed to wait on child");
+
+    String::from_utf8_lossy(&output.stdout).to_string()
 }

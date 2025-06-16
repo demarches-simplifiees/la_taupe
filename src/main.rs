@@ -32,14 +32,26 @@ fn main() {
     if args.len() == 1 {
         let _ = server::main();
     } else {
-        let path = Path::new(&args[1]);
+        let paths: Vec<&Path> = args[1..].iter().map(Path::new).collect();
 
-        match Analysis::try_from(path) {
-            Ok(analysis) => println!("{}", serde_json::to_string(&analysis).unwrap()),
-            Err(msg) => {
-                eprintln!("{}", json!({ "error": msg }));
-                std::process::exit(1);
+        paths.iter().for_each(|path| {
+            let result = Analysis::try_from(*path);
+            match result {
+                Ok(analysis_result) => {
+                    let json = json!({
+                        "file_path": path.to_str().unwrap(),
+                        "analysis": analysis_result
+                    });
+                    println!("{}", serde_json::to_string_pretty(&json).unwrap());
+                }
+                Err(msg) => {
+                    let json = json!({
+                        "file_path": path.to_str().unwrap(),
+                        "error": msg
+                    });
+                    println!("{}", serde_json::to_string_pretty(&json).unwrap());
+                }
             }
-        }
+        });
     }
 }

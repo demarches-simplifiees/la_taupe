@@ -66,7 +66,7 @@ fn second_column_start_position(line: &str, middle: usize) -> Option<usize> {
 
     line.rfind("   ").map(|pos| pos + 3).map(|pos| {
         // on regarde le barycentere de la ligne et on regarde ou il est mis
-        if middle <= pos + (line.trim().len() / 2) {
+        if middle <= pos + (line.trim().chars().count() / 2) {
             Some(pos)
         } else {
             None
@@ -75,7 +75,11 @@ fn second_column_start_position(line: &str, middle: usize) -> Option<usize> {
 }
 
 fn second_column_position(block: &Block) -> Option<usize> {
-    let max_length = block.iter().map(|line| line.len()).max().unwrap_or(0);
+    let max_length = block
+        .iter()
+        .map(|line| line.chars().count())
+        .max()
+        .unwrap_or(0);
     let position: Option<usize> = block
         .iter()
         .filter_map(|line| second_column_start_position(line, max_length / 2))
@@ -91,10 +95,14 @@ fn split_2_columns(block: &Block) -> Vec<Block> {
             let (first_column, second_column) = block
                 .iter()
                 .map(|line| {
-                    if line.len() < pos {
-                        (line.as_str(), "")
+                    if line.chars().count() < pos {
+                        (line.to_string(), "".to_string())
                     } else {
-                        line.split_at(pos)
+                        let chars: Vec<char> = line.chars().collect();
+                        (
+                            chars[..pos].iter().collect::<String>(),
+                            chars[pos..].iter().collect::<String>(),
+                        )
                     }
                 })
                 .fold((vec![], vec![]), |mut acc, (first, second)| {
@@ -140,32 +148,56 @@ mod tests {
     #[test]
     fn test_second_column_start_position() {
         let line = "first column";
-        assert_eq!(second_column_start_position(line, line.len() / 2), None);
+        assert_eq!(
+            second_column_start_position(line, line.chars().count() / 2),
+            None
+        );
 
         let line = "  first column";
-        assert_eq!(second_column_start_position(line, line.len() / 2), None);
+        assert_eq!(
+            second_column_start_position(line, line.chars().count() / 2),
+            None
+        );
 
         let line = "                second column";
-        assert_eq!(second_column_start_position(line, line.len() / 2), Some(16));
+        assert_eq!(
+            second_column_start_position(line, line.chars().count() / 2),
+            Some(16)
+        );
 
         let line = "first column   second column";
-        assert_eq!(second_column_start_position(line, line.len() / 2), Some(15));
+        assert_eq!(
+            second_column_start_position(line, line.chars().count() / 2),
+            Some(15)
+        );
 
         let line = "first column        second column";
-        assert_eq!(second_column_start_position(line, line.len() / 2), Some(20));
+        assert_eq!(
+            second_column_start_position(line, line.chars().count() / 2),
+            Some(20)
+        );
 
         let line = "first column        second column";
-        assert_eq!(second_column_start_position(line, line.len() / 2), Some(20));
+        assert_eq!(
+            second_column_start_position(line, line.chars().count() / 2),
+            Some(20)
+        );
 
         let line = "first column        second column      third column";
-        assert_eq!(second_column_start_position(line, line.len() / 2), None);
+        assert_eq!(
+            second_column_start_position(line, line.chars().count() / 2),
+            None
+        );
 
         let line = "   first column        second column";
-        assert_eq!(second_column_start_position(line, line.len() / 2), Some(23));
+        assert_eq!(
+            second_column_start_position(line, line.chars().count() / 2),
+            Some(23)
+        );
 
         // TODO
         // let line = "first column        second column   ";
-        // assert_eq!(second_column_start_position(line, line.len()/2), Some(20));
+        // assert_eq!(second_column_start_position(line, line.chars().count()/2), Some(20));
     }
 
     #[test]

@@ -121,24 +121,102 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
 }
 
 fn extract_iban(text: String) -> Option<String> {
-    let french_iban_re = Regex::new(r"(?<iban>FR[[:digit:]]{2}([[:space:]]*[[:alnum:]]{4}){5})([[:space:]]*[[:alnum:]][[:digit:]]{2})").unwrap();
+    let french_iban_re = Regex::new(r"(?<iban>FR[[:digit:]]{2}([[[:space:]]\|]*[[:alnum:]]{4}){5})([[[:space:]]|]*[[:alnum:]][[:digit:]]{2})").unwrap();
 
-    let mut iban = french_iban_re
-        .find(&text)
+    let to_remove = Regex::new(r"[[[:space:]]|]*").unwrap();
+
+    let mut ibans = french_iban_re
+        .find_iter(&text)
         .map(|x| x.as_str().to_string())
         // change multiple spaces by one space
-        .map(|x| x.split_whitespace().collect::<Vec<&str>>().join(" "));
+        .map(|x| to_remove.replace_all(&x, "").to_string())
+        .collect::<Vec<String>>();
+
+    let found_ibans = ibans
+        .clone()
+        .into_iter()
+        .filter_map(|x| x.parse::<Iban>().ok())
+        .collect::<Vec<Iban>>();
+
+    if !found_ibans.is_empty() {
+        return Some(found_ibans[0].to_string());
+    }
 
     // sometimes the iban is written with weird space (credit_agricole_2.txt)
     // so we try to match by removing all spaces
-    if iban.is_none() {
-        let text_without_spaces = text.replace(" ", "");
-        iban = french_iban_re
-            .find(&text_without_spaces)
-            .map(|x| x.as_str().to_string());
+    let text_without_spaces = text.replace(" ", "");
+    ibans = french_iban_re
+        .find_iter(&text_without_spaces)
+        .map(|x| x.as_str().to_string())
+        .map(|x| to_remove.replace_all(&x, "").to_string())
+        .collect::<Vec<String>>();
+
+    let found_ibans = ibans
+        .clone()
+        .into_iter()
+        .filter_map(|x| x.parse::<Iban>().ok())
+        .collect::<Vec<Iban>>();
+
+    if !found_ibans.is_empty() {
+        return Some(found_ibans[0].to_string());
     }
 
-    iban?.parse::<Iban>().ok().map(|x| x.to_string())
+    let lax_frenc_iban_re = Regex::new(r"(?<iban>FR[[:alnum:]]{2}([[[:space:]]\|]*[[:alnum:]]{4}){5})([[[:space:]]|]*[[:alnum:]][[:digit:]]{2})").unwrap();
+
+    let lax_ibans = lax_frenc_iban_re
+        .find_iter(&text)
+        .map(|x| x.as_str().to_string())
+        // change multiple spaces by one space
+        .map(|x| to_remove.replace_all(&x, "").to_string())
+        .collect::<Vec<String>>();
+
+    if lax_ibans.len() < 2 {
+        return None;
+    }
+
+    // we take the 2 first iban and count the number of different characters
+    let iban1 = lax_ibans[0].clone();
+    let iban2 = lax_ibans[1].clone();
+
+    let mut differences = Vec::new();
+
+    // Itérer sur les caractères des chaînes
+    for (index, (c1, c2)) in iban1.chars().zip(iban2.chars()).enumerate() {
+        if c1 != c2 {
+            differences.push(index);
+        }
+    }
+
+    // to many combinations
+    if differences.len() > 10 {
+        return None;
+    }
+
+    let mut combinations = Vec::new();
+    let num_differences = differences.len();
+    let num_combinations = 1 << num_differences; // 2^n
+
+    for i in 0..num_combinations {
+        let mut combo = iban1.to_string();
+        for (j, &diff_pos) in differences.iter().enumerate() {
+            if (i >> j) & 1 == 1 {
+                let c = iban2.chars().nth(diff_pos).unwrap();
+                combo.replace_range(diff_pos..diff_pos + 1, &c.to_string());
+            }
+        }
+        combinations.push(combo);
+    }
+
+    let found_ibans = combinations
+        .into_iter()
+        .filter_map(|x| x.parse::<Iban>().ok())
+        .collect::<Vec<Iban>>();
+
+    if found_ibans.len() == 1 {
+        Some(found_ibans[0].to_string())
+    } else {
+        None
+    }
 }
 
 fn extract_fr_bic(content: &str) -> Option<String> {
@@ -202,6 +280,22 @@ mod tests {
     fn test_extract_iban() {
         let iban = "FR76 3000 1000 6449 1900 9562 088".to_string();
         assert_eq!(extract_iban(iban.clone()).unwrap(), iban);
+
+        let other_iban = "FR76 | 3000
+
+          1000 | 6449
+
+          1900 | 9562 | 088"
+            .to_string();
+        assert_eq!(extract_iban(other_iban).unwrap(), iban);
+
+        let iban_with_faults = "
+          FRTS 3000 1000 6449 1900 9562 088
+          FR76 3000 BOO0 6666 1900 9562 088
+        "
+        .to_string();
+
+        assert_eq!(extract_iban(iban_with_faults).unwrap(), iban);
     }
 
     #[test]

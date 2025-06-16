@@ -41,6 +41,10 @@ fn vec_to_rib(content: Vec<u8>) -> Result<Rib, String> {
     } else if filetype == "image/png" || filetype == "image/jpeg" {
         let string_rib = image_bytes_to_string(content);
         Rib::try_from(string_rib)
+    } else if filetype == "text/plain" {
+        let string_rib = String::from_utf8(content)
+            .map_err(|_| "Failed to convert bytes to string".to_string())?;
+        Rib::try_from(string_rib)
     } else {
         Err(format!("Unsupported file type: {}", filetype))
     }
