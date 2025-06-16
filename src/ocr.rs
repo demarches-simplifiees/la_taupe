@@ -17,6 +17,10 @@ pub fn image_bytes_to_string(content: Vec<u8>) -> String {
 }
 
 pub fn image_to_string(img: DynamicImage) -> String {
+    img_to_string_using_tesseract(img)
+}
+
+pub fn image_to_string_using_ocrs(img: DynamicImage) -> String {
     let img = img.into_rgb8();
 
     #[allow(clippy::const_is_empty)]
