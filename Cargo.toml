@@ -39,4 +39,4 @@ assert_cmd = "*"
 static_init = "*"
 
 [package.metadata.deb]
-depends = "poppler-utils"
+depends = "poppler-utils, tesseract-ocr, tesseract-ocr-fra"
