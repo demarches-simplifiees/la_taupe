@@ -1,6 +1,6 @@
 use std::env;
 
-use super::analyze;
+use super::{analyze, version};
 use actix_web::{middleware, App, HttpServer};
 use std::net::{SocketAddr, ToSocketAddrs};
 
@@ -10,6 +10,7 @@ pub async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(middleware::Logger::default())
             .service(analyze::analyze)
+            .service(version::version)
     })
     .bind(binding_address())?
     .run()
