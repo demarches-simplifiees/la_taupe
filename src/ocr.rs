@@ -89,9 +89,12 @@ pub fn img_to_string_using_tesseract(img: DynamicImage) -> String {
     let mut child = Command::new("tesseract")
         .args([
             "--psm",
-            "12",
+            "12", // sparse text with orientation and script detection
+            "--oem",
+            "2", // Original Tesseract Engine (work with characters recognition, good for
+            // IBAN Numbers) + LSTM (work with words recognition, good for text)
             "-c",
-            "preserve_interword_spaces=1",
+            "preserve_interword_spaces=1", // Try to keep the layout
             "-l",
             "fra",
             "-",
