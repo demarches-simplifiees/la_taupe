@@ -4,7 +4,7 @@ use std::{
     process::{Command, Stdio},
 };
 
-use crate::ocr::image_to_string;
+use crate::ocr::{image_to_string, Ocr};
 
 pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
     let filetype = tree_magic_mini::from_u8(&bytes);
@@ -41,7 +41,7 @@ pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
     }
 
     let img = pdf_to_img(cloned_bytes);
-    text = image_to_string(img);
+    text = image_to_string(img, Ocr::Tesseract);
 
     if !text.trim().is_empty() {
         return Ok(text);

@@ -8,6 +8,7 @@ use crate::{
     ocr::image_bytes_to_string,
     twoddoc::{ddoc::Ddoc, parse},
 };
+use crate::ocr::Ocr::{Tesseract, Ocrs};
 
 use crate::rib::Rib;
 
@@ -39,8 +40,13 @@ fn vec_to_rib(content: Vec<u8>) -> Result<Rib, String> {
         let string_rib = pdf_bytes_to_string(content)?;
         Rib::try_from(string_rib)
     } else if filetype == "image/png" || filetype == "image/jpeg" {
-        let string_rib = image_bytes_to_string(content);
-        Rib::try_from(string_rib)
+        let string_rib_tesseract = image_bytes_to_string(content.clone(), Tesseract);
+        if let Ok(rib) = Rib::try_from(string_rib_tesseract) {
+            return Ok(rib);
+        }
+
+        let string_rib_ocrs = image_bytes_to_string(content, Ocrs);
+        Rib::try_from(string_rib_ocrs)
     } else if filetype == "text/plain" {
         let string_rib = String::from_utf8(content)
             .map_err(|_| "Failed to convert bytes to string".to_string())?;

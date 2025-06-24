@@ -12,15 +12,25 @@ use crate::image_utils::clean_image;
 const DETECTION_MODEL: &[u8] = include_bytes!("../models/text-detection.rten");
 const RECOGNITION_MODEL: &[u8] = include_bytes!("../models/text-recognition.rten");
 
-pub fn image_bytes_to_string(content: Vec<u8>) -> String {
-    let img = image::load_from_memory(&content).expect("Failed to load image from bytes");
-
-    image_to_string(img)
+#[derive(Debug, Clone, Copy)]
+pub enum Ocr {
+    Tesseract,
+    Ocrs,
 }
 
-pub fn image_to_string(img: DynamicImage) -> String {
+pub fn image_bytes_to_string(content: Vec<u8>, engine: Ocr) -> String {
+    let img = image::load_from_memory(&content).expect("Failed to load image from bytes");
+
+    image_to_string(img, engine)
+}
+
+pub fn image_to_string(img: DynamicImage, engine: Ocr) -> String {
     let cleaned_image = clean_image(&img, "an_image");
-    img_to_string_using_tesseract(cleaned_image)
+
+    match engine {
+        Ocr::Tesseract => img_to_string_using_tesseract(cleaned_image),
+        Ocr::Ocrs => image_to_string_using_ocrs(cleaned_image),
+    }
 }
 
 pub fn image_to_string_using_ocrs(img: DynamicImage) -> String {
