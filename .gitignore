@@ -3,3 +3,4 @@ tests/fixtures/static_server/node_modules
 .aider*
 models/*
 !models/.gitkeep
+la_taupe_debug
