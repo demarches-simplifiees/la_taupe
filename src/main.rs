@@ -1,4 +1,8 @@
-use la_taupe::{analysis::Analysis, http::server, twoddoc::trust_service};
+use la_taupe::{
+    analysis::{Analysis, Hint, Type},
+    http::server,
+    twoddoc::trust_service,
+};
 use serde_json::json;
 use std::{env::args, path::Path};
 
@@ -33,9 +37,8 @@ fn main() {
         let _ = server::main();
     } else {
         let paths: Vec<&Path> = args[1..].iter().map(Path::new).collect();
-
         paths.iter().for_each(|path| {
-            let result = Analysis::try_from(*path);
+            let result = Analysis::try_from((*path, Some(Hint::Type(Type::Rib))));
             match result {
                 Ok(analysis_result) => {
                     let json = json!({

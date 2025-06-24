@@ -4,13 +4,15 @@ use std::{
     process::{Command, Stdio},
 };
 
-use crate::ocr::image_to_string;
-
 pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
     let filetype = tree_magic_mini::from_u8(&bytes);
 
     match filetype {
-        "application/pdf" => Ok(pdf_to_img(bytes)),
+        "application/pdf" => {
+            let buffer = pdf_to_img_bytes(bytes.clone());
+            let img = image::load_from_memory(&buffer).expect("Failed to load image from bytes");
+            Ok(img)
+        }
         "image/png" | "image/jpeg" => {
             Ok(image::load_from_memory(&bytes).expect("Failed to load image from bytes"))
         }
@@ -18,8 +20,7 @@ pub fn bytes_to_img(bytes: Vec<u8>) -> Result<DynamicImage, String> {
     }
 }
 
-pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
-    let cloned_bytes = bytes.clone();
+pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> String {
     let mut child = Command::new("pdftotext")
         .args(["-layout", "-", "-"])
         .stdin(Stdio::piped())
@@ -34,23 +35,10 @@ pub fn pdf_bytes_to_string(bytes: Vec<u8>) -> Result<String, String> {
 
     let output = child.wait_with_output().expect("Failed to wait on child");
 
-    let mut text = String::from_utf8_lossy(&output.stdout).to_string();
-
-    if !text.trim().is_empty() {
-        return Ok(text);
-    }
-
-    let img = pdf_to_img(cloned_bytes);
-    text = image_to_string(img);
-
-    if !text.trim().is_empty() {
-        return Ok(text);
-    }
-
-    Err("Failed to extract text from PDF".to_string())
+    String::from_utf8_lossy(&output.stdout).to_string()
 }
 
-fn pdf_to_img(file: Vec<u8>) -> DynamicImage {
+pub fn pdf_to_img_bytes(file: Vec<u8>) -> Vec<u8> {
     let mut child = Command::new("pdftoppm")
         .args(["-png", "-singlefile"])
         .stdin(Stdio::piped())
@@ -64,6 +52,5 @@ fn pdf_to_img(file: Vec<u8>) -> DynamicImage {
     });
 
     let output = child.wait_with_output().expect("Failed to wait on child");
-
-    image::load_from_memory(&output.stdout).expect("Failed to load image from bytes")
+    output.stdout
 }
