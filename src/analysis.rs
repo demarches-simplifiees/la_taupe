@@ -106,12 +106,12 @@ impl TryFrom<(Vec<u8>, Option<Hint>)> for Analysis {
     }
 }
 
-impl TryFrom<&Path> for Analysis {
+impl TryFrom<(&Path, Option<Hint>)> for Analysis {
     type Error = String;
 
-    fn try_from(file_path: &Path) -> Result<Self, String> {
+    fn try_from((file_path, hint): (&Path, Option<Hint>)) -> Result<Self, String> {
         let content =
             std::fs::read(file_path).map_err(|e| format!("Failed to read file: {}", e))?;
-        Analysis::try_from((content, None))
+        Analysis::try_from((content, hint))
     }
 }
