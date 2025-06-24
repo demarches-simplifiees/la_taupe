@@ -1784,6 +1784,7 @@ dependencies = [
  "env_logger",
  "iban_validate",
  "image",
+ "imageproc",
  "itertools",
  "log",
  "nom 8.0.0",
