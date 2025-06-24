@@ -7,6 +7,8 @@ use image::{DynamicImage, ImageFormat};
 use ocrs::{ImageSource, OcrEngine, OcrEngineParams};
 use rten::Model;
 
+use crate::image_utils::clean_image;
+
 const DETECTION_MODEL: &[u8] = include_bytes!("../models/text-detection.rten");
 const RECOGNITION_MODEL: &[u8] = include_bytes!("../models/text-recognition.rten");
 
@@ -17,7 +19,8 @@ pub fn image_bytes_to_string(content: Vec<u8>) -> String {
 }
 
 pub fn image_to_string(img: DynamicImage) -> String {
-    img_to_string_using_tesseract(img)
+    let cleaned_image = clean_image(&img, "an_image");
+    img_to_string_using_tesseract(cleaned_image)
 }
 
 pub fn image_to_string_using_ocrs(img: DynamicImage) -> String {
