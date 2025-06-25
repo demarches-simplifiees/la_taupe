@@ -41,6 +41,7 @@ rten = "*"
 [dev-dependencies]
 assert_cmd = "*"
 static_init = "*"
+serial_test = "*"
 
 [package.metadata.deb]
 depends = "poppler-utils, tesseract-ocr, tesseract-ocr-fra"
