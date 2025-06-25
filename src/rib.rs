@@ -234,13 +234,13 @@ fn extract_fr_bic(content: &str) -> Option<String> {
     }
 
     let mut fr_without_space_matches = get_unique_matches(&fr_without_space, content);
-    log::info!("fr_without_space_matches: {:?}", fr_without_space_matches);
+    log::trace!("fr_without_space_matches: {:?}", fr_without_space_matches);
     if fr_without_space_matches.len() == 1 {
         return Some(fr_without_space_matches.pop().unwrap());
     }
 
     let mut fr_with_xxx_with_space_matches = get_unique_matches(&fr_with_xxx_with_space, content);
-    log::info!(
+    log::trace!(
         "fr_with_xxx_with_space_matches: {:?}",
         fr_with_xxx_with_space_matches
     );
@@ -253,7 +253,7 @@ fn extract_fr_bic(content: &str) -> Option<String> {
     let content_without_spaces = whitespace_regex.replace_all(content, "");
     let mut joined_fr_without_space_matches =
         get_unique_matches(&fr_without_space, &content_without_spaces);
-    log::info!(
+    log::trace!(
         "joined_fr_without_space_matches: {:?}",
         joined_fr_without_space_matches
     );

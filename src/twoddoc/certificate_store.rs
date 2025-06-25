@@ -25,7 +25,7 @@ fn fetch_certificate(autorite_certification: &str, identifiant_du_certificat: &s
     url.query_pairs_mut()
         .append_pair("name", identifiant_du_certificat);
 
-    log::info!("Fetching certificate from {}", url);
+    log::trace!("Fetching certificate from {}", url);
 
     let client = Client::new();
     let resp = client.get(url.as_str()).send().unwrap();

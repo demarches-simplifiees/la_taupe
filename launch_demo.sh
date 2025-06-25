@@ -11,7 +11,7 @@ echo 'launching fake backend storage with node listenning on 3333'
 DEBUG=express:* node tests/fixtures/static_server/server.js > "$NODE_LOG" 2>&1 &
 
 echo 'launching la_taupe listenning on 8080'
-RUST_LOG=info ./target/release/la_taupe > "$LA_TAUPE_LOG" 2>&1 &
+RUST_LOG=actix_web::middleware::logger=info ./target/release/la_taupe > "$LA_TAUPE_LOG" 2>&1 &
 
 sleep 2
 
