@@ -7,8 +7,6 @@ use serde_json::json;
 use std::{env::args, path::Path};
 
 fn main() {
-    env_logger::init();
-
     let args: Vec<String> = args().collect();
 
     if args.contains(&String::from("--help")) {
@@ -36,6 +34,8 @@ fn main() {
     if args.len() == 1 {
         let _ = server::main();
     } else {
+        env_logger::init();
+
         let paths: Vec<&Path> = args[1..].iter().map(Path::new).collect();
         paths.iter().for_each(|path| {
             let result = Analysis::try_from((*path, Some(Hint::Type(Type::Rib))));
