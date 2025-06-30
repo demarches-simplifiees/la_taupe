@@ -12,11 +12,21 @@ use crate::{
     twoddoc::{ddoc::Ddoc, parse},
 };
 
-#[derive(Deserialize, Serialize)]
-pub struct Analysis {
-    #[serde(rename = "2ddoc")]
-    pub ddoc: Option<Ddoc>,
-    pub rib: Option<Rib>,
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(untagged)]
+pub enum Analysis {
+    DdocAndRib {
+        #[serde(rename = "2ddoc")]
+        ddoc: Ddoc,
+        rib: Rib,
+    },
+    Rib {
+        rib: Rib,
+    },
+    Ddoc {
+        #[serde(rename = "2ddoc")]
+        ddoc: Option<Ddoc>,
+    },
 }
 
 #[derive(Deserialize, Copy, Clone, Debug)]
@@ -82,38 +92,26 @@ impl TryFrom<(Vec<u8>, Option<Hint>)> for Analysis {
             Some(Hint::Type(Type::Rib)) => {
                 let rib = vec_to_rib(content)?;
 
-                Ok(Analysis {
-                    rib: Some(rib),
-                    ddoc: None,
-                })
+                Ok(Analysis::Rib { rib })
             }
             Some(Hint::Type(Type::Twoddoc)) => {
                 let ddoc = vec_to_ddoc(content)?;
 
-                Ok(Analysis {
-                    ddoc: Some(ddoc),
-                    rib: None,
-                })
+                Ok(Analysis::Ddoc { ddoc: Some(ddoc) })
             }
             None => {
                 let rib = vec_to_rib(content.clone());
 
                 if rib.is_ok() {
                     let rib = rib.unwrap();
-                    return Ok(Analysis {
-                        rib: Some(rib),
-                        ddoc: None,
-                    });
+                    return Ok(Analysis::Rib { rib });
                 }
 
                 let ddoc = vec_to_ddoc(content);
 
                 if ddoc.is_ok() {
                     let ddoc = ddoc.unwrap();
-                    return Ok(Analysis {
-                        ddoc: Some(ddoc),
-                        rib: None,
-                    });
+                    return Ok(Analysis::Ddoc { ddoc: Some(ddoc) });
                 }
 
                 Err("Failed to parse content as either RIB or 2DDoc".to_string())

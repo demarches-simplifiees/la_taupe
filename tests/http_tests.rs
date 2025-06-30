@@ -20,12 +20,14 @@ fn nominal_case() {
         .send()
         .unwrap();
 
-    let analysis: Analysis = response.json().unwrap();
-
-    assert_eq!(
-        analysis.ddoc.unwrap().entete.autorite_certification,
-        "FR00".to_string()
-    );
+    if let Analysis::Ddoc { ddoc } = response.json().unwrap() {
+        assert_eq!(
+            ddoc.unwrap().entete.autorite_certification,
+            "FR00".to_string()
+        );
+    } else {
+        panic!("Expected Analysis::OnlyDdoc");
+    }
 }
 
 #[test]
@@ -58,9 +60,11 @@ fn missing_datamatrix() {
         .send()
         .unwrap();
 
-    let analysis: Analysis = response.json().unwrap();
-
-    assert!(analysis.ddoc.is_none());
+    if let Analysis::Ddoc { ddoc } = response.json().unwrap() {
+        assert!(ddoc.is_none());
+    } else {
+        panic!("Expected Analysis::OnlyDdoc");
+    }
 }
 
 #[test]
