@@ -12,23 +12,22 @@ pub struct Rib {
     bic: Option<String>,
 }
 
-impl TryFrom<String> for Rib {
-    type Error = String;
-
-    fn try_from(text: String) -> Result<Self, String> {
+impl Rib {
+    pub fn parse(text: String) -> Option<Self> {
         let lines = clean(text.clone());
 
         let titulaire = extract_titulaire(lines.clone());
         let bic = extract_fr_bic(&text);
 
         if let Some(iban) = extract_iban(text) {
-            Ok(Rib {
+            Some(Rib {
                 titulaire,
                 iban,
                 bic,
             })
         } else {
-            Err(format!("No IBAN found in the text. Lines: {:?}", lines))
+            log::trace!("No IBAN found in the text. Lines: {:?}", lines);
+            None
         }
     }
 }
@@ -323,8 +322,9 @@ mod tests {
 
     fn to_rib(path: &str) -> Rib {
         let layout_text = std::fs::read_to_string(path).unwrap();
-        Rib::try_from(layout_text)
-            .unwrap_or_else(|_| panic!("Failed to parse RIB from file: {}", path))
+        Rib::parse(layout_text).unwrap_or_else(|| {
+            panic!("Failed to parse RIB from file: {}", path);
+        })
     }
 
     fn test_file(path: &str, titulaire: Option<Vec<&str>>, iban: &str, bic: &str) {
