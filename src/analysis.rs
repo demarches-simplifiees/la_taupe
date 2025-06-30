@@ -13,16 +13,17 @@ use crate::{
 };
 
 #[derive(Deserialize, Serialize, Debug)]
-#[serde(untagged)]
+#[serde(tag = "hint")]
 pub enum Analysis {
+    #[serde(rename = "2ddoc_and_rib")]
     DdocAndRib {
         #[serde(rename = "2ddoc")]
-        ddoc: Ddoc,
-        rib: Rib,
+        ddoc: Option<Ddoc>,
+        rib: Option<Rib>,
     },
-    Rib {
-        rib: Rib,
-    },
+    #[serde(rename = "rib")]
+    Rib { rib: Option<Rib> },
+    #[serde(rename = "2ddoc")]
     Ddoc {
         #[serde(rename = "2ddoc")]
         ddoc: Option<Ddoc>,
@@ -43,45 +44,47 @@ pub enum Type {
     Twoddoc,
 }
 
-fn vec_to_rib(content: Vec<u8>) -> Result<Rib, String> {
+fn vec_to_rib(content: Vec<u8>) -> Result<Option<Rib>, String> {
     let filetype = tree_magic_mini::from_u8(&content);
 
     if filetype == "application/pdf" {
         let string_rib = pdf_bytes_to_string(content.clone());
 
         if !string_rib.trim().is_empty() {
-            Rib::try_from(string_rib)
+            Ok(Rib::parse(string_rib))
         } else {
             let img = pdf_to_img_bytes(content);
-            image_to_rib(img)
+            Ok(image_to_rib(img))
         }
     } else if filetype == "image/png" || filetype == "image/jpeg" {
-        image_to_rib(content)
+        Ok(image_to_rib(content))
     } else if filetype == "text/plain" {
         let string_rib = String::from_utf8(content)
             .map_err(|_| "Failed to convert bytes to string".to_string())?;
-        Rib::try_from(string_rib)
+        Ok(Rib::parse(string_rib))
     } else {
         Err(format!("Unsupported file type: {}", filetype))
     }
 }
 
-fn image_to_rib(content: Vec<u8>) -> Result<Rib, String> {
+fn image_to_rib(content: Vec<u8>) -> Option<Rib> {
     let string_rib_tesseract = image_bytes_to_string(content.clone(), Tesseract);
-    if let Ok(rib) = Rib::try_from(string_rib_tesseract) {
-        return Ok(rib);
+    if let Some(rib) = Rib::parse(string_rib_tesseract) {
+        return Some(rib);
     }
 
     let string_rib_ocrs = image_bytes_to_string(content, Ocrs);
-    Rib::try_from(string_rib_ocrs)
+    Rib::parse(string_rib_ocrs)
 }
 
-fn vec_to_ddoc(content: Vec<u8>) -> Result<Ddoc, String> {
+fn vec_to_ddoc(content: Vec<u8>) -> Result<Option<Ddoc>, String> {
     let img = bytes_to_img(content)?;
-    let datamatrix = fetch_datamatrix(img)
-        .ok_or_else(|| "Failed to fetch Data Matrix from image".to_string())?;
 
-    parse(&datamatrix).ok_or_else(|| "Failed to parse 2DDoc".to_string())
+    if let Some(datamatrix) = fetch_datamatrix(img) {
+        Ok(parse(&datamatrix))
+    } else {
+        Ok(None)
+    }
 }
 
 impl TryFrom<(Vec<u8>, Option<Hint>)> for Analysis {
@@ -97,24 +100,13 @@ impl TryFrom<(Vec<u8>, Option<Hint>)> for Analysis {
             Some(Hint::Type(Type::Twoddoc)) => {
                 let ddoc = vec_to_ddoc(content)?;
 
-                Ok(Analysis::Ddoc { ddoc: Some(ddoc) })
+                Ok(Analysis::Ddoc { ddoc })
             }
             None => {
-                let rib = vec_to_rib(content.clone());
+                let rib = vec_to_rib(content.clone()).unwrap_or(None);
+                let ddoc = vec_to_ddoc(content).unwrap_or(None);
 
-                if rib.is_ok() {
-                    let rib = rib.unwrap();
-                    return Ok(Analysis::Rib { rib });
-                }
-
-                let ddoc = vec_to_ddoc(content);
-
-                if ddoc.is_ok() {
-                    let ddoc = ddoc.unwrap();
-                    return Ok(Analysis::Ddoc { ddoc: Some(ddoc) });
-                }
-
-                Err("Failed to parse content as either RIB or 2DDoc".to_string())
+                Ok(Analysis::DdocAndRib { ddoc, rib })
             }
         }
     }
