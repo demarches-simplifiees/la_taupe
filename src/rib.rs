@@ -13,6 +13,13 @@ pub struct Rib {
 }
 
 impl Rib {
+    pub fn from_iban(iban: String, titulaire: Option<Vec<String>>) -> Self {
+        Rib {
+            titulaire,
+            iban,
+            bic: None,
+        }
+    }
     pub fn parse(text: String) -> Option<Self> {
         let lines = clean(text.clone());
 
@@ -32,16 +39,17 @@ impl Rib {
     }
 }
 
-fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
+pub fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
     let mut maybe_titulaire: Option<Vec<String>> = None;
 
     let titulaire = Regex::new(r"(?i)titulaire|intitulé du compte").unwrap();
-    let code_postal = Regex::new(r"^\d{5}").unwrap();
+    let code_postal = Regex::new(r"^\d{5}\s").unwrap();
     let stop_words =
         Regex::new(r"(?i)domiciliation|identification|iban|cadre réservé|numéro de compte")
             .unwrap();
     let civilite =
-        Regex::new(r"(?i)(^|\s)(m|monsieur|mr|mademoiselle|ml|mle|mlle|madame|mme)\.?\s").unwrap();
+        Regex::new(r"(?i)(^|\s)(m|monsieur|mr|mademoiselle|ml|mle|mlle|melle|madame|mme)\.?\s")
+            .unwrap();
 
     let titulaire_index = lines.iter().position(|x| titulaire.is_match(x));
 
@@ -119,10 +127,26 @@ fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
     maybe_titulaire.filter(|titulaire| titulaire.len() < 10)
 }
 
-fn extract_iban(text: String) -> Option<String> {
-    let french_iban_re = Regex::new(r"(?<iban>FR[[:digit:]]{2}([[[:space:]]\|]*[[:alnum:]]{4}){5})([[[:space:]]|]*[[:alnum:]][[:digit:]]{2})").unwrap();
+pub fn replace_char_by_digit_in_2_and_3_position(ibans: Vec<String>) -> Vec<String> {
+    ibans
+        .into_iter()
+        .map(|x| {
+            let mut chars: Vec<char> = x.chars().collect();
+            if chars.len() > 2 && (chars[2] == 'O' || chars[2] == 'o') {
+                chars[2] = '0';
+            }
+            if chars.len() > 3 && (chars[3] == 'O' || chars[3] == 'o') {
+                chars[3] = '0';
+            }
+            chars.into_iter().collect()
+        })
+        .collect()
+}
 
-    let to_remove = Regex::new(r"[[[:space:]]|]*").unwrap();
+pub fn extract_iban(text: String) -> Option<String> {
+    let french_iban_re = Regex::new(r"(?<iban>FR[[[:digit:]]O]{2}([[[:space:]]\|,]*[[:alnum:]]{4}){5})([[[:space:]]|,]*[[:alnum:]][[:digit:]]{2})").unwrap();
+
+    let to_remove = Regex::new(r"[[[:space:]]|,]*").unwrap();
 
     let mut ibans = french_iban_re
         .find_iter(&text)
@@ -130,6 +154,8 @@ fn extract_iban(text: String) -> Option<String> {
         // change multiple spaces by one space
         .map(|x| to_remove.replace_all(&x, "").to_string())
         .collect::<Vec<String>>();
+
+    ibans = replace_char_by_digit_in_2_and_3_position(ibans);
 
     let found_ibans = ibans
         .clone()
@@ -149,6 +175,8 @@ fn extract_iban(text: String) -> Option<String> {
         .map(|x| x.as_str().to_string())
         .map(|x| to_remove.replace_all(&x, "").to_string())
         .collect::<Vec<String>>();
+
+    ibans = replace_char_by_digit_in_2_and_3_position(ibans);
 
     let found_ibans = ibans
         .clone()
