@@ -57,7 +57,7 @@ pub fn ocrs_anchors(
     img: &DynamicImage,
     word_regex: &Regex,
     line_regex: Option<&Regex>,
-) -> (String, Vec<Anchor>) {
+) -> (String, Vec<TextLine>, Vec<Anchor>) {
     let img = img.clone().into_rgb8();
 
     #[allow(clippy::const_is_empty)]
@@ -89,11 +89,16 @@ pub fn ocrs_anchors(
     let line_rects = engine.find_text_lines(&ocr_input, &word_rects);
 
     // Recognize the characters in each line.
-    let line_texts = engine.recognize_text(&ocr_input, &line_rects).unwrap();
-
-    let text = line_texts
+    let text_lines = engine
+        .recognize_text(&ocr_input, &line_rects)
+        .unwrap()
         .iter()
         .flatten()
+        .cloned()
+        .collect::<Vec<TextLine>>();
+
+    let text = text_lines
+        .iter()
         // Filter likely spurious detections. With future model improvements
         // this should become unnecessary.
         .filter(|l| l.to_string().len() > 1)
@@ -101,17 +106,20 @@ pub fn ocrs_anchors(
         .collect::<Vec<String>>()
         .join("\n");
 
-    (text, extract_anchor(line_texts, word_regex, line_regex))
+    (
+        text,
+        text_lines.clone(),
+        extract_anchors(text_lines, word_regex, line_regex),
+    )
 }
 
-fn extract_anchor(
-    line_texts: Vec<Option<TextLine>>,
+pub fn extract_anchors(
+    text_lines: Vec<TextLine>,
     word_regex: &Regex,
     line_regex: Option<&Regex>,
 ) -> Vec<Anchor> {
-    line_texts
+    text_lines
         .iter()
-        .filter_map(|line| line.as_ref())
         .filter(|line| {
             if line_regex.is_none() {
                 return true;
