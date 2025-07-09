@@ -91,7 +91,7 @@ fn normalize_minmax(img: &GrayImage, alpha: u8, beta: u8) -> GrayImage {
     })
 }
 
-fn angle(image: &DynamicImage, _name: &str) -> f32 {
+fn angle(image: &DynamicImage, name: &str) -> f32 {
     let gray_image = image.clone().into_luma8();
     let edges = canny(&gray_image, 50.0, 100.0);
 
@@ -116,9 +116,9 @@ fn angle(image: &DynamicImage, _name: &str) -> f32 {
 
     let lines = lines.unwrap();
 
-    // if var("DEBUG_IMAGE").is_ok() {
-    //     draw_lines(&edges.into(), &lines, name);
-    // }
+    if var("DEBUG_LINE_DETECTION").is_ok() {
+        draw_lines(&edges.into(), &lines, name);
+    }
 
     let angles: Vec<f64> = lines
         .iter()
