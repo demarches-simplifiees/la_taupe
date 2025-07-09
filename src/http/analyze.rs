@@ -113,7 +113,7 @@ async fn handle_response(mut resp: Response, hint: Option<Hint>) -> HttpResponse
             });
     }
 
-    match Analysis::try_from((bytes, hint)) {
+    match Analysis::try_from((bytes, hint, "remote_file")) {
         Ok(analysis) => HttpResponse::Ok()
             .content_type(ContentType::json())
             .json(analysis),

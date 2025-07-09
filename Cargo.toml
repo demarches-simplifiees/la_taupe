@@ -29,6 +29,7 @@ linfa-clustering = "*"
 ndarray = "*"
 env_logger = "*"
 regex = "*"
+scraper = "*"
 serde = { version = "*", features = ["derive"] }
 serde-xml-rs = "*"
 serde_json = "*"
