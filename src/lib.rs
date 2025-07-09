@@ -1,5 +1,6 @@
 pub mod analysis;
 pub mod datamatrix;
+pub mod fi_extract;
 pub mod file_utils;
 pub mod http;
 pub mod image_utils;

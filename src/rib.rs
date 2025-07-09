@@ -3,21 +3,25 @@ use itertools::Itertools;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::text_utils::clean;
+use crate::{fi_extract::IbanToBankName, text_utils::clean};
 
 #[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Rib {
     titulaire: Option<Vec<String>>,
     iban: String,
     bic: Option<String>,
+    bank_name: Option<String>,
 }
 
 impl Rib {
     pub fn from_iban(iban: String, titulaire: Option<Vec<String>>) -> Self {
+        let bank_name = IbanToBankName::new().bank_name(&iban);
+
         Rib {
             titulaire,
             iban,
             bic: None,
+            bank_name,
         }
     }
     pub fn parse(text: String) -> Option<Self> {
@@ -27,10 +31,13 @@ impl Rib {
         let bic = extract_fr_bic(&text);
 
         if let Some(iban) = extract_iban(text) {
+            let bank_name = IbanToBankName::new().bank_name(&iban);
+
             Some(Rib {
                 titulaire,
                 iban,
                 bic,
+                bank_name,
             })
         } else {
             log::trace!("No IBAN found in the text. Lines: {:?}", lines);
@@ -362,7 +369,8 @@ mod tests {
             Rib {
                 titulaire,
                 iban: iban.to_string(),
-                bic: Some(bic.to_string())
+                bic: Some(bic.to_string()),
+                bank_name: None
             }
         );
     }
