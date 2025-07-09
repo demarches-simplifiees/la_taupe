@@ -50,7 +50,13 @@ fn vec_to_rib(content: Vec<u8>, name: &str) -> Result<Option<Rib>, String> {
         let string_rib = pdf_bytes_to_string(content.clone());
 
         if !string_rib.trim().is_empty() {
-            Ok(Rib::parse(string_rib))
+            let rib = Rib::parse(string_rib);
+            if rib.is_some() {
+                Ok(rib)
+            } else {
+                let img = pdf_to_img_bytes(content);
+                Ok(image_bytes_to_rib(img, name))
+            }
         } else {
             let img = pdf_to_img_bytes(content);
             Ok(image_bytes_to_rib(img, name))
