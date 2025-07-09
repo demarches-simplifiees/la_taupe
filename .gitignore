@@ -4,3 +4,4 @@ tests/fixtures/static_server/node_modules
 models/*
 !models/.gitkeep
 la_taupe_debug
+.ruby-version
