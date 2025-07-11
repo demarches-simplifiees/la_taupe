@@ -2,7 +2,7 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
-use crate::file_utils::pdf_to_img_bytes;
+use crate::file_utils::{list_img_in_pdf, pdf_to_img_bytes};
 use crate::rib::Rib;
 use crate::{
     datamatrix::fetch_datamatrix,
@@ -53,9 +53,14 @@ fn vec_to_rib(content: Vec<u8>, name: &str) -> Result<Option<Rib>, String> {
             let rib = Rib::parse(string_rib);
             if rib.is_some() {
                 Ok(rib)
-            } else {
+            // if there is only one image in PDF, it could be a scan of a RIB
+            // with some poorly parse text.
+            // don't try it for all as it is costly
+            } else if list_img_in_pdf(content.clone()) == 1 {
                 let img = pdf_to_img_bytes(content);
                 Ok(image_bytes_to_rib(img, name))
+            } else {
+                Ok(None)
             }
         } else {
             let img = pdf_to_img_bytes(content);

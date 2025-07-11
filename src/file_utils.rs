@@ -54,3 +54,21 @@ pub fn pdf_to_img_bytes(file: Vec<u8>) -> Vec<u8> {
     let output = child.wait_with_output().expect("Failed to wait on child");
     output.stdout
 }
+
+pub fn list_img_in_pdf(file: Vec<u8>) -> usize {
+    let mut child = Command::new("pdfimages")
+        .args(["-list", "-"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("failed to execute process");
+
+    let mut stdin = child.stdin.take().expect("Failed to open stdin");
+    std::thread::spawn(move || {
+        stdin.write_all(&file).expect("Failed to write to stdin");
+    });
+
+    let output = child.wait_with_output().expect("Failed to wait on child");
+
+    String::from_utf8_lossy(&output.stdout).lines().count() - 2 // Subtract header lines
+}
