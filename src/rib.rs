@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 use crate::{
     fi_extract::IbanToBankName,
     text::{address::find_titulaire_addr, simple_titulaire::find_simple_titulaire},
-    text_utils::clean,
 };
 
 #[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
@@ -29,8 +28,6 @@ impl Rib {
         }
     }
     pub fn parse(text: String) -> Option<Self> {
-        let lines = clean(text.clone());
-
         let titulaire = find_titulaire_addr(&text)
             .map(|addr| addr.lines())
             .or_else(|| find_simple_titulaire(&text, 3));
@@ -47,7 +44,6 @@ impl Rib {
                 bank_name,
             })
         } else {
-            log::trace!("No IBAN found in the text. Lines: {:?}", lines);
             None
         }
     }
