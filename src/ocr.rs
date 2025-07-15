@@ -10,6 +10,7 @@ use crate::{
     ocrs::{extract_anchors, image_to_string_using_ocrs, ocrs_anchors},
     rib::{extract_fr_bic, extract_iban, Rib},
     tesseract::{img_to_string_using_tesseract, tess_analyze},
+    text::simple_titulaire::find_simple_titulaire,
 };
 
 const OPTIMAL_TESSERACT_HEIGHT: u32 = 30;
@@ -181,7 +182,7 @@ fn zoom_and_extract_titulaire(
         })
         .collect::<Vec<String>>();
 
-    let mut titulaire = titulaires
+    let titulaire = titulaires
         .first()
         .map(|s| s.lines().map(|l| l.to_string()).collect());
 
@@ -190,10 +191,9 @@ fn zoom_and_extract_titulaire(
     }
 
     let titulaire_word_regex = Regex::new(r"(?i)titulaire").unwrap();
-    let du_compte_word_regex = Regex::new(r"(?i)du[[:space:]]+compte").unwrap();
     let (_, _text_lines, titulaire_anchors) = ocrs_anchors(img, &titulaire_word_regex, None);
 
-    let binding = titulaire_anchors
+    titulaire_anchors
         .iter()
         .enumerate()
         .map(|(index, anchor)| {
@@ -206,45 +206,7 @@ fn zoom_and_extract_titulaire(
             image_to_string_using_ocrs(cropped_img)
         })
         .filter(|text| titulaire_word_regex.is_match(text))
-        .map(|text| {
-            // on supprime tout ce qui se situe avant "titulaire"
-            let mat = titulaire_word_regex.find(&text).unwrap();
-            let mut text = text[mat.start()..].trim().to_string();
-
-            // on supprime toutes les lignes situées après la civilité
-            if let Some(start) = find_civilite(&text) {
-                // on trouve la fin de la ligne ou du text apres matching civilite
-                let end_of_line = text[start..]
-                    .find('\n')
-                    .map_or(text.len(), |pos| start + pos);
-
-                text = text[..end_of_line].trim().to_string();
-            }
-
-            // s'il y a un : on prend ce qui est après
-            text = if let Some(colon_index) = text.find(':') {
-                text[colon_index + 1..].trim().to_string()
-            } else {
-                text
-            };
-
-            // on supprime tout ce qui se situe avant "du compte"
-            text = if let Some(mat) = du_compte_word_regex.find(&text) {
-                text[mat.end()..].trim().to_string()
-            } else {
-                text
-            };
-
-            text
-        })
-        .filter(|text| text.lines().count() == 1)
-        .collect::<Vec<String>>();
-
-    let titulaires = binding.first();
-
-    titulaire = titulaires.map(|s| vec![s.to_string()]);
-
-    titulaire
+        .find_map(|text| find_simple_titulaire(&text, 1))
 }
 
 fn crop(

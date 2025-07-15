@@ -3,7 +3,10 @@ use itertools::Itertools;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::{fi_extract::IbanToBankName, text_utils::clean};
+use crate::{
+    fi_extract::IbanToBankName,
+    text::{address::find_titulaire_addr, simple_titulaire::find_simple_titulaire},
+};
 
 #[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
 pub struct Rib {
@@ -25,9 +28,10 @@ impl Rib {
         }
     }
     pub fn parse(text: String) -> Option<Self> {
-        let lines = clean(text.clone());
+        let titulaire = find_titulaire_addr(&text)
+            .map(|addr| addr.lines())
+            .or_else(|| find_simple_titulaire(&text, 3));
 
-        let titulaire = extract_titulaire(lines.clone());
         let bic = extract_fr_bic(&text);
 
         if let Some(iban) = extract_iban(&text) {
@@ -40,98 +44,9 @@ impl Rib {
                 bank_name,
             })
         } else {
-            log::trace!("No IBAN found in the text. Lines: {:?}", lines);
             None
         }
     }
-}
-
-pub fn extract_titulaire(lines: Vec<String>) -> Option<Vec<String>> {
-    let mut maybe_titulaire: Option<Vec<String>> = None;
-
-    let titulaire = Regex::new(r"(?i)titulaire|intitulé du compte").unwrap();
-    let code_postal = Regex::new(r"^\d{5}\s").unwrap();
-    let stop_words =
-        Regex::new(r"(?i)domiciliation|identification|iban|cadre réservé|numéro de compte")
-            .unwrap();
-    let civilite =
-        Regex::new(r"(?i)(^|\s)(m|monsieur|mr|mademoiselle|ml|mle|mlle|melle|madame|mme)\.?\s")
-            .unwrap();
-
-    let titulaire_index = lines.iter().position(|x| titulaire.is_match(x));
-
-    if let Some(titulaire_index) = titulaire_index {
-        let mut titulaire = Vec::<String>::new();
-
-        // if the titulaire line includes a civilite, we extract it
-        // ex : "Titulaire : Mlle Frida Kahlo"
-        // ex : "Intitulé du compte ML KHALO FRIDA OU M MATISSE H"
-        if let Some(found) = civilite.find(&lines[titulaire_index]) {
-            let start_pos = found.start();
-            let first_line = lines[titulaire_index][start_pos..].trim().to_string();
-            titulaire.push(first_line);
-        }
-
-        let code_postal_index = lines[titulaire_index..]
-            .iter()
-            .position(|x| code_postal.is_match(x));
-
-        let stop_words_index = lines[titulaire_index..]
-            .iter()
-            .position(|x| stop_words.is_match(x))
-            .map(|index| index - 1); // -1 because we exclude the domiciliation line itself
-
-        let end_index = [code_postal_index, stop_words_index]
-            .iter()
-            .filter_map(|&x| x)
-            .min();
-
-        if let Some(end_index) = end_index {
-            let mut more_titulaire = lines[(titulaire_index + 1)..=(end_index + titulaire_index)]
-                .iter()
-                // remove lines containing only 'word :' as 'Compte :'
-                .filter(|x| !regex::Regex::new(r"^\s*\w+\s*:\s*$").unwrap().is_match(x))
-                // remove ": " at the beginning of the line
-                .map(|x| x.trim_start_matches(": ").to_string())
-                .collect::<Vec<String>>();
-
-            titulaire.append(&mut more_titulaire);
-        }
-
-        if titulaire.is_empty() {
-            maybe_titulaire = None;
-        } else {
-            maybe_titulaire = Some(titulaire);
-        };
-    } else {
-        let civilite_index = lines.iter().position(|x| civilite.is_match(x));
-
-        let code_postal_index = lines[civilite_index?..]
-            .iter()
-            .position(|x| code_postal.is_match(x));
-
-        let stop_word_index = lines[civilite_index?..]
-            .iter()
-            .position(|x| stop_words.is_match(x))
-            .map(|index| index - 1); // -1 because we exclude the domiciliation line itself
-
-        let end_index = [code_postal_index, stop_word_index]
-            .iter()
-            .filter_map(|&x| x)
-            .min();
-
-        if end_index.is_some() {
-            let titulaire = lines[civilite_index?..=(end_index.unwrap() + civilite_index?)]
-                .iter()
-                .map(|x| x.trim_start_matches(": ").to_string())
-                .collect::<Vec<String>>();
-
-            maybe_titulaire = Some(titulaire);
-        }
-    }
-
-    // final check to remove obvious false positives
-    maybe_titulaire.filter(|titulaire| titulaire.len() < 10)
 }
 
 pub fn replace_char_by_digit_in_2_and_3_position(ibans: Vec<String>) -> Vec<String> {
@@ -328,25 +243,6 @@ mod tests {
         ";
 
         assert_eq!(extract_iban(iban_with_faults).unwrap(), iban);
-    }
-
-    #[test]
-    fn extract_titulaire_one_line_titulaire() {
-        let lines = vec!["Titulaire : Mlle Frida Kahlo".to_string()];
-        let expected = Some(vec!["Mlle Frida Kahlo".to_string()]);
-        assert_eq!(extract_titulaire(lines), expected);
-    }
-
-    #[test]
-    fn extract_titulaire_obviously_too_long() {
-        let lines = vec!["Titulaire : Mlle Frida Kahlo".to_string()];
-        let mut lines = lines
-            .into_iter()
-            .chain(vec!["a".to_string(); 9])
-            .collect::<Vec<String>>();
-        lines.push("domiciliation".to_string()); // add a stop word
-
-        assert_eq!(extract_titulaire(lines), None);
     }
 
     fn vec_to_string(v: Vec<&str>) -> Vec<String> {

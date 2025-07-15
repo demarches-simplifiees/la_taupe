@@ -9,5 +9,5 @@ pub mod ocrs;
 pub mod rib;
 pub mod shapes;
 pub mod tesseract;
-pub mod text_utils;
+pub mod text;
 pub mod twoddoc;
