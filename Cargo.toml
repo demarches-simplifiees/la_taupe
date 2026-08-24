@@ -64,3 +64,6 @@ serial_test = "*"
 
 [package.metadata.deb]
 depends = "poppler-utils, tesseract-ocr, tesseract-ocr-fra"
+# cargo-deb packages every [[bin]] by default, which trips on the
+# feature-gated bench/synth tooling: ship only the production binary
+assets = [["target/release/la_taupe", "usr/bin/", "755"]]
